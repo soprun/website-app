@@ -23,7 +23,7 @@ import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
-import createFetch from './createFetch';
+import createFetch from './utils/createFetch';
 import passport from './passport';
 import router from './router';
 import models from './data/models';

@@ -7,9 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-/* @flow */
-
-import type { graphql as graphqType, GraphQLSchema } from 'graphql';
+import type {graphql as graphqType, GraphQLSchema} from 'graphql';
 
 type Fetch = (url: string, options: ?any) => Promise<any>;
 
@@ -28,7 +26,7 @@ type Options = {
  */
 function createFetch(
   fetch: Fetch,
-  { baseUrl, cookie, schema, graphql }: Options,
+  {baseUrl, cookie, schema, graphql}: Options,
 ) {
   // NOTE: Tweak the default options to suite your application needs
   const defaults = {
@@ -38,7 +36,7 @@ function createFetch(
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      ...(cookie ? { Cookie: cookie } : null),
+      ...(cookie ? {Cookie: cookie} : null),
     },
   };
 
@@ -50,7 +48,7 @@ function createFetch(
       const result = await graphql(
         schema,
         query.query,
-        { request: {} }, // fill in request vars needed by graphql
+        {request: {}}, // fill in request vars needed by graphql
         null,
         query.variables,
       );
@@ -62,13 +60,13 @@ function createFetch(
 
     return isGraphQL || url.startsWith('/api')
       ? fetch(`${baseUrl}${url}`, {
-          ...defaults,
-          ...options,
-          headers: {
-            ...defaults.headers,
-            ...(options && options.headers),
-          },
-        })
+        ...defaults,
+        ...options,
+        headers: {
+          ...defaults.headers,
+          ...(options && options.headers),
+        },
+      })
       : fetch(url, options);
   };
 }
