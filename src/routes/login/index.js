@@ -2,9 +2,9 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import Login from './Login';
 
-const title = 'Log In';
+const title = 'Log in';
 
-function action() {
+export default function action() {
   return {
     chunks: ['login'],
     title,
@@ -15,5 +15,3 @@ function action() {
     ),
   };
 }
-
-export default action;
