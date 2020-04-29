@@ -20,12 +20,7 @@ const config = {
 // Initialize Firebase with a "default" Firebase project
 let app = firebase.initializeApp(config, process.env.BROWSER ? 'browser' : 'server');
 
-// console.log(defaultProject.name); // "[DEFAULT]"
-
 // Option 1: Access Firebase services via the defaultProject variable
 export let auth = app.auth();
 export let database = app.database();
 export let firestore = app.firestore();
-
-// export const defaultAuth = firebase.auth();
-// export const defaultDatabase = firebase.database();

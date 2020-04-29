@@ -43,7 +43,13 @@ module.exports = {
 
   // Authentication
   auth: {
-    jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit' },
+    jwt: {secret: process.env.JWT_SECRET || 'React Starter Kit'},
+
+    auth0: {
+      id: process.env.AUTH0_CLIENT_ID,
+      domain: process.env.AUTH0_DOMAIN,
+      secret: process.env.AUTH0_CLIENT_SECRET,
+    },
 
     // https://developers.facebook.com/
     facebook: {
