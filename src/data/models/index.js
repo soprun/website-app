@@ -14,4 +14,4 @@ function sync(...args) {
 }
 
 export default {sync};
-export {User, UserProfile};
+export { User, UserProfile };

@@ -5,8 +5,8 @@
  */
 
 import passport from 'passport';
-import {Strategy as LocalStrategy} from 'passport-local';
-import {User} from './data/models';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { User } from './data/models';
 
 /**
  * Sign in
@@ -27,13 +27,13 @@ passport.use(
 
         if (!user) {
           return done(null, false, {
-            message: 'An error occurred, an invalid email address.'
+            message: 'An error occurred, an invalid email address.',
           });
         }
 
         if (password !== user.password) {
           return done(null, false, {
-            message: 'An error occurred, an invalid password.'
+            message: 'An error occurred, an invalid password.',
           });
         }
 
@@ -45,7 +45,7 @@ passport.use(
         }
       };
 
-      return promise().catch(done);
+      promise().catch(done);
     },
   ),
 );

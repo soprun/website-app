@@ -1,4 +1,4 @@
-import type {graphql as graphqType, GraphQLSchema} from 'graphql';
+import type { graphql as graphqType, GraphQLSchema } from 'graphql';
 
 type Fetch = (url: string, options: ?any) => Promise<any>;
 

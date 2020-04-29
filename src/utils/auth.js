@@ -1,21 +1,23 @@
-import firebase from "firebase/app";
-import {auth} from '../services/firebase';
-
 // Sign up new users
-export function signup(email, password) {
-  return auth.createUserWithEmailAndPassword(email, password);
-}
+// export function SignUp(email, password) {
+//   return email + password;
+// }
+
+// SignUp.propTypes = {
+//   email: PropTypes.string.isRequired,
+//   password: PropTypes.string.isRequired,
+// };
 
 // Sign in existing users
-export function signin(email, password) {
-  return auth.signInWithEmailAndPassword(email, password);
-}
+// export function SignIn(email, password) {
+//   return email + password;
+// }
 
-export function signInWithGoogle() {
-  let provider = new firebase.auth.OAuthProvider('google.com');
-  return auth.signInWithRedirect(provider);
-}
+// SignIn.propTypes = {
+//   email: PropTypes.string.isRequired,
+//   password: PropTypes.string.isRequired,
+// };
 
-export function logout() {
-  return auth.signOut();
-}
+// export function Logout() {
+//   return null;
+// }
