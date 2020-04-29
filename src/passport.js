@@ -18,7 +18,7 @@ passport.use(
       passwordField: 'password',
     },
     (email, password, done) => {
-      const promise = async () => {
+      return async () => {
         const user = await User.findOne({
           where: {
             email,
@@ -43,9 +43,7 @@ passport.use(
             email: user.email,
           });
         }
-      };
-
-      promise().catch(done);
+      }
     },
   ),
 );
