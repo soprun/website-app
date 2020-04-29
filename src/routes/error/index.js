@@ -13,7 +13,7 @@ import ErrorPage from './ErrorPage';
 function action() {
   return {
     title: 'Demo Error',
-    component: <ErrorPage />,
+    component: <ErrorPage/>,
   };
 }
 

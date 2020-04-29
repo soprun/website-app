@@ -7,10 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import {
-  GraphQLSchema as Schema,
-  GraphQLObjectType as ObjectType,
-} from 'graphql';
+import {GraphQLObjectType as ObjectType, GraphQLSchema as Schema,} from 'graphql';
 
 import me from './queries/me';
 import news from './queries/news';

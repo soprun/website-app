@@ -1,21 +1,12 @@
 /**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
-/**
  * Passport.js reference implementation.
  * The database schema used in this sample is available at
  * https://github.com/membership/membership.db/tree/master/postgres
  */
 
 import passport from 'passport';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { User, UserLogin, UserClaim, UserProfile } from './data/models';
+import {Strategy as FacebookStrategy} from 'passport-facebook';
+import {User, UserClaim, UserLogin, UserProfile} from './data/models';
 import config from './config';
 
 /**
@@ -45,7 +36,7 @@ passport.use(
         if (req.user) {
           const userLogin = await UserLogin.findOne({
             attributes: ['name', 'key'],
-            where: { name: loginName, key: profile.id },
+            where: {name: loginName, key: profile.id},
           });
           if (userLogin) {
             // There is already a Facebook account that belongs to you.
@@ -56,8 +47,8 @@ passport.use(
               {
                 id: req.user.id,
                 email: profile._json.email,
-                logins: [{ name: loginName, key: profile.id }],
-                claims: [{ type: claimType, value: profile.id }],
+                logins: [{name: loginName, key: profile.id}],
+                claims: [{type: claimType, value: profile.id}],
                 profile: {
                   displayName: profile.displayName,
                   gender: profile._json.gender,
@@ -66,9 +57,9 @@ passport.use(
               },
               {
                 include: [
-                  { model: UserLogin, as: 'logins' },
-                  { model: UserClaim, as: 'claims' },
-                  { model: UserProfile, as: 'profile' },
+                  {model: UserLogin, as: 'logins'},
+                  {model: UserClaim, as: 'claims'},
+                  {model: UserProfile, as: 'profile'},
                 ],
               },
             );
@@ -80,7 +71,7 @@ passport.use(
         } else {
           const users = await User.findAll({
             attributes: ['id', 'email'],
-            where: { '$logins.name$': loginName, '$logins.key$': profile.id },
+            where: {'$logins.name$': loginName, '$logins.key$': profile.id},
             include: [
               {
                 attributes: ['name', 'key'],
@@ -91,11 +82,11 @@ passport.use(
             ],
           });
           if (users.length) {
-            const user = users[0].get({ plain: true });
+            const user = users[0].get({plain: true});
             done(null, user);
           } else {
             let user = await User.findOne({
-              where: { email: profile._json.email },
+              where: {email: profile._json.email},
             });
             if (user) {
               // There is already an account using this email address. Sign in to
@@ -106,8 +97,8 @@ passport.use(
                 {
                   email: profile._json.email,
                   emailConfirmed: true,
-                  logins: [{ name: loginName, key: profile.id }],
-                  claims: [{ type: claimType, value: accessToken }],
+                  logins: [{name: loginName, key: profile.id}],
+                  claims: [{type: claimType, value: accessToken}],
                   profile: {
                     displayName: profile.displayName,
                     gender: profile._json.gender,
@@ -116,9 +107,9 @@ passport.use(
                 },
                 {
                   include: [
-                    { model: UserLogin, as: 'logins' },
-                    { model: UserClaim, as: 'claims' },
-                    { model: UserProfile, as: 'profile' },
+                    {model: UserLogin, as: 'logins'},
+                    {model: UserClaim, as: 'claims'},
+                    {model: UserProfile, as: 'profile'},
                   ],
                 },
               );

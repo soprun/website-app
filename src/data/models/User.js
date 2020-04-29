@@ -21,7 +21,7 @@ const User = Model.define(
 
     email: {
       type: DataType.STRING(255),
-      validate: { isEmail: true },
+      validate: {isEmail: true},
     },
 
     emailConfirmed: {
@@ -30,7 +30,7 @@ const User = Model.define(
     },
   },
   {
-    indexes: [{ fields: ['email'] }],
+    indexes: [{fields: ['email']}],
   },
 );
 

@@ -1,18 +1,9 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
-import { graphql } from 'graphql';
+import expressJwt, {UnauthorizedError as Jwt401Error} from 'express-jwt';
+import {graphql} from 'graphql';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
@@ -21,7 +12,7 @@ import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import App from './components/App';
 import Html from './components/Html';
-import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
+import {ErrorPageWithoutStyle} from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import createFetch from './utils/createFetch';
 import passport from './passport';
@@ -58,7 +49,7 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 //
@@ -92,15 +83,15 @@ app.get(
   }),
 );
 app.get(
-  '/login/facebook/return',
+  '/login/facebook/callback',
   passport.authenticate('facebook', {
     failureRedirect: '/login',
     session: false,
   }),
   (req, res) => {
     const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
-    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
+    const token = jwt.sign(req.user, config.auth.jwt.secret, {expiresIn});
+    res.cookie('id_token', token, {maxAge: 1000 * expiresIn, httpOnly: true});
     res.redirect('/');
   },
 );
@@ -113,7 +104,7 @@ app.use(
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
-    rootValue: { request: req },
+    rootValue: {request: req},
     pretty: __DEV__,
   })),
 );
@@ -156,13 +147,13 @@ app.get('*', async (req, res, next) => {
       return;
     }
 
-    const data = { ...route };
+    const data = {...route};
     data.children = ReactDOM.renderToString(
       <App context={context} insertCss={insertCss}>
         {route.component}
       </App>,
     );
-    data.styles = [{ id: 'css', cssText: [...css].join('') }];
+    data.styles = [{id: 'css', cssText: [...css].join('')}];
 
     const scripts = new Set();
     const addChunk = chunk => {
@@ -203,9 +194,9 @@ app.use((err, req, res, next) => {
     <Html
       title="Internal Server Error"
       description={err.message}
-      styles={[{ id: 'css', cssText: errorPageStyle._getCss() }]} // eslint-disable-line no-underscore-dangle
+      styles={[{id: 'css', cssText: errorPageStyle._getCss()}]} // eslint-disable-line no-underscore-dangle
     >
-      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
+      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err}/>)}
     </Html>,
   );
   res.status(err.status || 500);

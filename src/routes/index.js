@@ -20,10 +20,6 @@ const routes = {
       load: () => import(/* webpackChunkName: 'home' */ './home'),
     },
     {
-      path: '/contact',
-      load: () => import(/* webpackChunkName: 'contact' */ './contact'),
-    },
-    {
       path: '/login',
       load: () => import(/* webpackChunkName: 'login' */ './login'),
     },
@@ -36,12 +32,8 @@ const routes = {
       load: () => import(/* webpackChunkName: 'about' */ './about'),
     },
     {
-      path: '/privacy',
-      load: () => import(/* webpackChunkName: 'privacy' */ './privacy'),
-    },
-    {
-      path: '/admin',
-      load: () => import(/* webpackChunkName: 'admin' */ './admin'),
+      path: '/dashboard',
+      load: () => import(/* webpackChunkName: 'dashboard' */ './dashboard'),
     },
 
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
@@ -51,7 +43,7 @@ const routes = {
     },
   ],
 
-  async action({ next }) {
+  async action({next}) {
     // Execute each child route until one of them return the result
     const route = await next();
 

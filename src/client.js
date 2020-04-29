@@ -1,22 +1,13 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import 'whatwg-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import deepForceUpdate from 'react-deep-force-update';
 import queryString from 'query-string';
-import { createPath } from 'history';
+import {createPath} from 'history';
 import App from './components/App';
 import createFetch from './utils/createFetch';
 import history from './history';
-import { updateMeta } from './utils/DOMUtils';
+import {updateMeta} from './utils/DOMUtils';
 import router from './router';
 
 // Enables critical path CSS rendering

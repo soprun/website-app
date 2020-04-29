@@ -12,7 +12,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Register.css';
 
-export default function Register({ title }) {
+export default function Register({title}) {
   useStyles(s);
   return (
     <div className={s.root}>

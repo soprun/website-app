@@ -12,7 +12,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Page.css';
 
-export default function Page({ title, html }) {
+export default function Page({title, html}) {
   useStyles(s);
   return (
     <div className={s.root}>
@@ -20,7 +20,7 @@ export default function Page({ title, html }) {
         <h1>{title}</h1>
         <div
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{__html: html}}
         />
       </div>
     </div>
