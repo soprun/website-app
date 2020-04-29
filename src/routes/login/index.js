@@ -10,7 +10,7 @@ export default function action() {
     title,
     component: (
       <Layout>
-        <Login title={title}/>
+        <Login title={title} />
       </Layout>
     ),
   };

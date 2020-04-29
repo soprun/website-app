@@ -27,12 +27,12 @@ import ApplicationContext from './ApplicationContext';
  *   );
  */
 
-export default function App({context, insertCss, children}) {
+export default function App({ context, insertCss, children }) {
   // NOTE: If you need to add or modify header, footer etc. of the app,
   // please do that inside the Layout component.
   return (
-    <StyleContext.Provider value={{insertCss}}>
-      <ApplicationContext.Provider value={{context}}>
+    <StyleContext.Provider value={{ insertCss }}>
+      <ApplicationContext.Provider value={{ context }}>
         {React.Children.only(children)}
       </ApplicationContext.Provider>
     </StyleContext.Provider>

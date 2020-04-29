@@ -4,7 +4,7 @@ import ErrorPage from './ErrorPage';
 function action() {
   return {
     title: 'Sorry, a critical error occurred on this page',
-    component: <ErrorPage/>,
+    component: <ErrorPage />,
   };
 }
 

@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Home.css';
 
-export default function Home({news}) {
+export default function Home({ news }) {
   useStyles(s);
   return (
     <div className={s.root}>
@@ -17,7 +17,7 @@ export default function Home({news}) {
             <div
               className={s.newsDesc}
               // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{__html: item.content}}
+              dangerouslySetInnerHTML={{ __html: item.content }}
             />
           </article>
         ))}

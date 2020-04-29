@@ -49,7 +49,7 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //
@@ -107,7 +107,7 @@ app.use(
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
-    rootValue: {request: req},
+    rootValue: { request: req },
     pretty: __DEV__,
   })),
 );
@@ -150,13 +150,13 @@ app.get('*', async (req, res, next) => {
       return;
     }
 
-    const data = {...route};
+    const data = { ...route };
     data.children = ReactDOM.renderToString(
       <App context={context} insertCss={insertCss}>
         {route.component}
       </App>,
     );
-    data.styles = [{id: 'css', cssText: [...css].join('')}];
+    data.styles = [{ id: 'css', cssText: [...css].join('') }];
 
     const scripts = new Set();
     const addChunk = chunk => {
@@ -197,9 +197,9 @@ app.use((err, req, res, next) => {
     <Html
       title="Internal Server Error"
       description={err.message}
-      styles={[{id: 'css', cssText: errorPageStyle._getCss()}]} // eslint-disable-line no-underscore-dangle
+      styles={[{ id: 'css', cssText: errorPageStyle._getCss() }]} // eslint-disable-line no-underscore-dangle
     >
-      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err}/>)}
+      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
     </Html>,
   );
   res.status(err.status || 500);

@@ -10,7 +10,7 @@ function action() {
     title,
     component: (
       <Layout>
-        <NotFound title={title}/>
+        <NotFound title={title} />
       </Layout>
     ),
     status: 404,

@@ -43,7 +43,7 @@ passport.use(
             email: user.email,
           });
         }
-      }
+      };
     },
   ),
 );

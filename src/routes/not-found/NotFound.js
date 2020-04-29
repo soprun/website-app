@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './NotFound.css';
 
-export default function NotFound({title}) {
+export default function NotFound({ title }) {
   useStyles(s);
 
   return (

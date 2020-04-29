@@ -28,7 +28,7 @@ function handleClick(props, event) {
 }
 
 export default function Link(props) {
-  const {to, children, ...attrs} = props;
+  const { to, children, ...attrs } = props;
 
   return (
     <a href={to} {...attrs} onClick={e => handleClick(props, e)}>

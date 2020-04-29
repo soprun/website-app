@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './ErrorPage.css';
 
-export function ErrorPageWithoutStyle({error}) {
+export function ErrorPageWithoutStyle({ error }) {
   if (__DEV__ && error) {
     return (
       <>

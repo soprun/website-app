@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Login.css';
 
-export default function Login({title}) {
+export default function Login({ title }) {
   useStyles(s);
 
   return (

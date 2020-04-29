@@ -8,8 +8,8 @@ import {
 const UserType = new ObjectType({
   name: 'User',
   fields: {
-    id: {type: new NonNull(ID)},
-    email: {type: StringType},
+    id: { type: new NonNull(ID) },
+    email: { type: StringType },
   },
 });
 

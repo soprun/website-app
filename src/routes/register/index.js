@@ -10,7 +10,7 @@ export default function action() {
     title,
     component: (
       <Layout>
-        <Register title={title}/>
+        <Register title={title} />
       </Layout>
     ),
   };

@@ -7,7 +7,7 @@ const isLogin = false;
 
 function action() {
   if (!isLogin) {
-    return {redirect: '/login'};
+    return { redirect: '/login' };
   }
 
   return {
@@ -15,7 +15,7 @@ function action() {
     title,
     component: (
       <Layout>
-        <Dashboard title={title}/>
+        <Dashboard title={title} />
       </Layout>
     ),
   };

@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <div className={s.root}>
       <div className={s.container}>
-        <Navigation/>
+        <Navigation />
         <Link className={s.brand} to="/">
           <img
             src={logoUrl}

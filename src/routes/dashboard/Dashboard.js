@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Dashboard.css';
 
-export default function Dashboard({title}) {
+export default function Dashboard({ title }) {
   useStyles(s);
   return (
     <div className={s.root}>
