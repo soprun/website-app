@@ -1,37 +1,34 @@
 import useStyles from 'isomorphic-style-loader/useStyles';
 import React from 'react';
-import PropTypes from 'prop-types';
 import s from './Home.css';
+import Page from "../../components/Page";
+import { Typography } from 'antd';
 
-export default function Home({ news }) {
+const {Title, Paragraph, Text} = Typography;
+
+export default function Home() {
   useStyles(s);
   return (
-    <div className={s.root}>
-      <div className={s.container}>
-        <h1>React.js News</h1>
-        {news.map(item => (
-          <article key={item.link} className={s.newsItem}>
-            <h1 className={s.newsTitle}>
-              <a href={item.link}>{item.title}</a>
-            </h1>
-            <div
-              className={s.newsDesc}
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: item.content }}
-            />
-          </article>
-        ))}
-      </div>
+    <div>
+      <Page>
+        <Title>Typography</Title>
+        <Paragraph>
+          In the process of internal desktop applications development, many different design specs and
+          implementations would be involved, which might cause designers and developers difficulties and
+          duplication and reduce the efficiency of development.
+        </Paragraph>
+        <Paragraph>
+          After massive project practice and summaries, Ant Design, a design language for background
+          applications, is refined by Ant UED Team, which aims to
+          <Text strong>
+            uniform the user interface specs for internal background projects, lower the unnecessary
+            cost of design differences and implementation and liberate the resources of design and
+            front-end development
+          </Text>.
+        </Paragraph>
+      </Page>
     </div>
   );
 }
 
-Home.propTypes = {
-  news: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
-      content: PropTypes.string,
-    }),
-  ).isRequired,
-};
+

@@ -1,24 +1,38 @@
 import useStyles from 'isomorphic-style-loader/useStyles';
 import React from 'react';
 import PropTypes from 'prop-types';
+import antd from 'antd/dist/antd.compact.css';
 import s from './Page.css';
+import { Layout, Menu } from 'antd';
 
-export default function Page({ title, html }) {
-  useStyles(s);
+const {Header, Content, Footer} = Layout;
+
+export default function Page({children}) {
+  useStyles(antd, s);
   return (
-    <div className={s.root}>
-      <div className={s.container}>
-        <h1>{title}</h1>
-        <div
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      </div>
-    </div>
+    <Layout className="layout">
+      <Header>
+        <div className={s.logo}/>
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1">About</Menu.Item>
+          <Menu.Item key="2">Dashboard</Menu.Item>
+          <Menu.Item key="3">Log in</Menu.Item>
+          <Menu.Item key="4">Sign up</Menu.Item>
+          <Menu.Item key="5">Log out</Menu.Item>
+        </Menu>
+      </Header>
+      <Content className={s.main}>
+        <div className={s.content}>
+            {children}
+        </div>
+      </Content>
+      <Footer className={s.footer}>
+        Ant Design © 2018 Created by Ant UED
+      </Footer>
+    </Layout>
   );
 }
 
 Page.propTypes = {
-  title: PropTypes.string.isRequired,
-  html: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };

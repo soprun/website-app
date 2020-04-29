@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../../components/Layout';
 import Register from './Register';
+import Page from "../../components/Page";
 
 const title = 'Sign up';
 
@@ -9,9 +9,9 @@ export default function action() {
     chunks: ['register'],
     title,
     component: (
-      <Layout>
+      <Page>
         <Register title={title} />
-      </Layout>
+      </Page>
     ),
   };
 }
