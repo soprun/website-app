@@ -5,124 +5,61 @@
  */
 
 import passport from 'passport';
-import {Strategy as FacebookStrategy} from 'passport-facebook';
-import {User, UserClaim, UserLogin, UserProfile} from './data/models';
-import config from './config';
+import {Strategy as LocalStrategy} from 'passport-local';
+import {User} from './data/models';
 
 /**
- * Sign in with Facebook.
+ * Sign in
  */
 passport.use(
-  new FacebookStrategy(
+  new LocalStrategy(
     {
-      clientID: config.auth.facebook.id,
-      clientSecret: config.auth.facebook.secret,
-      callbackURL: '/login/facebook/return',
-      profileFields: [
-        'displayName',
-        'name',
-        'email',
-        'link',
-        'locale',
-        'timezone',
-      ],
-      passReqToCallback: true,
+      usernameField: 'email',
+      passwordField: 'password',
     },
-    (req, accessToken, refreshToken, profile, done) => {
-      /* eslint-disable no-underscore-dangle */
-      const loginName = 'facebook';
-      const claimType = 'urn:facebook:access_token';
-      const fooBar = async () => {
-        if (req.user) {
-          const userLogin = await UserLogin.findOne({
-            attributes: ['name', 'key'],
-            where: {name: loginName, key: profile.id},
+    (email, password, done) => {
+      const promise = async () => {
+        const find = await User.findOne({
+          where: {
+            email,
+          },
+        });
+
+        if (find) {
+          return done(null, {
+            id: find.id,
+            email: find.email,
           });
-          if (userLogin) {
-            // There is already a Facebook account that belongs to you.
-            // Sign in with that account or delete it, then link it with your current account.
-            done();
-          } else {
-            const user = await User.create(
-              {
-                id: req.user.id,
-                email: profile._json.email,
-                logins: [{name: loginName, key: profile.id}],
-                claims: [{type: claimType, value: profile.id}],
-                profile: {
-                  displayName: profile.displayName,
-                  gender: profile._json.gender,
-                  picture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
-                },
-              },
-              {
-                include: [
-                  {model: UserLogin, as: 'logins'},
-                  {model: UserClaim, as: 'claims'},
-                  {model: UserProfile, as: 'profile'},
-                ],
-              },
-            );
-            done(null, {
-              id: user.id,
-              email: user.email,
-            });
-          }
-        } else {
-          const users = await User.findAll({
-            attributes: ['id', 'email'],
-            where: {'$logins.name$': loginName, '$logins.key$': profile.id},
+        }
+
+        const user = await User.create(
+          {
+            email,
+            password,
+            emailConfirmed: false,
+            profile: {
+              displayName: 'displayName',
+              gender: 'gender',
+              picture: '',
+            },
+          },
+          {
             include: [
               {
-                attributes: ['name', 'key'],
-                model: UserLogin,
-                as: 'logins',
-                required: true,
+                model: UserProfile,
+                as: 'profile',
               },
             ],
-          });
-          if (users.length) {
-            const user = users[0].get({plain: true});
-            done(null, user);
-          } else {
-            let user = await User.findOne({
-              where: {email: profile._json.email},
-            });
-            if (user) {
-              // There is already an account using this email address. Sign in to
-              // that account and link it with Facebook manually from Account Settings.
-              done(null);
-            } else {
-              user = await User.create(
-                {
-                  email: profile._json.email,
-                  emailConfirmed: true,
-                  logins: [{name: loginName, key: profile.id}],
-                  claims: [{type: claimType, value: accessToken}],
-                  profile: {
-                    displayName: profile.displayName,
-                    gender: profile._json.gender,
-                    picture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
-                  },
-                },
-                {
-                  include: [
-                    {model: UserLogin, as: 'logins'},
-                    {model: UserClaim, as: 'claims'},
-                    {model: UserProfile, as: 'profile'},
-                  ],
-                },
-              );
-              done(null, {
-                id: user.id,
-                email: user.email,
-              });
-            }
-          }
-        }
+          },
+        );
+
+        return done(null, {
+          id: user.id,
+          email: user.email,
+        });
       };
 
-      fooBar().catch(done);
+      promise().catch(done);
     },
   ),
 );

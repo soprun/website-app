@@ -75,26 +75,29 @@ app.use((err, req, res, next) => {
 
 app.use(passport.initialize());
 
-app.get(
-  '/login/facebook',
-  passport.authenticate('facebook', {
-    scope: ['email', 'user_location'],
-    session: false,
-  }),
-);
-app.get(
-  '/login/facebook/callback',
-  passport.authenticate('facebook', {
+app.post(
+  '/login',
+  passport.authenticate('local', {
     failureRedirect: '/login',
     session: false,
   }),
   (req, res) => {
     const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, config.auth.jwt.secret, {expiresIn});
-    res.cookie('id_token', token, {maxAge: 1000 * expiresIn, httpOnly: true});
+    const token = jwt.sign(req.user, config.auth.jwt.secret, {
+      expiresIn,
+    });
+    res.cookie('id_token', token, {
+      maxAge: 1000 * expiresIn,
+      httpOnly: true,
+    });
     res.redirect('/');
   },
 );
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
 //
 // Register API middleware

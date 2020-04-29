@@ -28,6 +28,10 @@ export default function Navigation() {
         Log in
       </Link>
       <span className={s.spacer}>or</span>
+      <Link className={s.link} to="/logout">
+        Log out
+      </Link>
+      <span className={s.spacer}>or</span>
       <Link className={cx(s.link, s.highlight)} to="/register">
         Sign up
       </Link>
