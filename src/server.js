@@ -78,7 +78,7 @@ app.use(passport.initialize());
 app.post(
   '/login',
   passport.authenticate('local', {
-    failureRedirect: '/login',
+    failureRedirect: '/login?state=failure',
     session: false,
   }),
   (req, res) => {

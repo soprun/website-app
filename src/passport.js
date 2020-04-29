@@ -19,47 +19,33 @@ passport.use(
     },
     (email, password, done) => {
       const promise = async () => {
-        const find = await User.findOne({
+        const user = await User.findOne({
           where: {
             email,
           },
         });
 
-        if (find) {
-          return done(null, {
-            id: find.id,
-            email: find.email,
+        if (!user) {
+          return done(null, false, {
+            message: 'An error occurred, an invalid email address.'
           });
         }
 
-        const user = await User.create(
-          {
-            email,
-            password,
-            emailConfirmed: false,
-            profile: {
-              displayName: 'displayName',
-              gender: 'gender',
-              picture: '',
-            },
-          },
-          {
-            include: [
-              {
-                model: UserProfile,
-                as: 'profile',
-              },
-            ],
-          },
-        );
+        if (password !== user.password) {
+          return done(null, false, {
+            message: 'An error occurred, an invalid password.'
+          });
+        }
 
-        return done(null, {
-          id: user.id,
-          email: user.email,
-        });
+        if (user) {
+          return done(null, {
+            id: user.id,
+            email: user.email,
+          });
+        }
       };
 
-      promise().catch(done);
+      return promise().catch(done);
     },
   ),
 );
