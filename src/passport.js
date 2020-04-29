@@ -18,32 +18,33 @@ passport.use(
       passwordField: 'password',
     },
     (email, password, done) => {
-      return async () => {
-        const user = await User.findOne({
+      User.findOne(
+        {
           where: {
             email,
           },
-        });
+        },
+        (err, user) => {
+          // This is how you handle error
+          if (err) return done(err);
 
-        if (!user) {
-          return done(null, false, {
-            message: 'An error occurred, an invalid email address.',
-          });
-        }
+          // When user is not found
+          if (!user)
+            return done(null, false, {
+              message: 'An error occurred, an invalid email address.',
+            });
 
-        if (password !== user.password) {
-          return done(null, false, {
-            message: 'An error occurred, an invalid password.',
-          });
-        }
+          // When password is not correct
+          if (password !== user.password) {
+            return done(null, false, {
+              message: 'An error occurred, an invalid password.',
+            });
+          }
 
-        if (user) {
-          return done(null, {
-            id: user.id,
-            email: user.email,
-          });
-        }
-      };
+          // When all things are good, we return the user
+          return done(null, user);
+        },
+      );
     },
   ),
 );
