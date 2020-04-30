@@ -17,6 +17,7 @@ function action() {
     chunks: ['dashboard'],
     title,
     description,
+    isLogin,
     component: (
       <Layout>
         <Dashboard title={title} />
