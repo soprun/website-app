@@ -1,22 +1,26 @@
 import useStyles from 'isomorphic-style-loader/useStyles';
 import React from 'react';
 import PropTypes from 'prop-types';
-// external-global styles must be imported in your JS.
-import normalizeCss from 'normalize.css';
+import { Layout as LayoutApp } from 'antd';
+import antd from 'antd/dist/antd.css';
 import s from './Layout.css';
-import Header from '../Header';
-import Feedback from '../Feedback';
-import Footer from '../Footer';
 
-export default function Layout({ children }) {
-  useStyles(s, normalizeCss);
+import Header from "../Header";
+
+export default function Layout({children}) {
+  useStyles(antd, s);
   return (
-    <>
-      <Header />
-      {children}
-      <Feedback />
-      <Footer />
-    </>
+    <LayoutApp className={s.layout}>
+      <Header/>
+      <LayoutApp.Content className={s.main}>
+        <div className={s.content}>
+          {children}
+        </div>
+      </LayoutApp.Content>
+      <LayoutApp.Footer className={s.footer}>
+        Ant Design © 2018 Created by Ant UED
+      </LayoutApp.Footer>
+    </LayoutApp>
   );
 }
 

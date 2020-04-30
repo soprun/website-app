@@ -1,17 +1,21 @@
 import React from 'react';
-import Register from './Register';
-import Page from "../../components/Page";
+import Layout from '../../components/Layout';
 
 const title = 'Sign up';
 
-export default function action() {
+function action() {
   return {
     chunks: ['register'],
-    title,
+    title: title,
     component: (
-      <Page>
-        <Register title={title} />
-      </Page>
+      <Layout>
+        <div>
+          <h1>{title}</h1>
+          <p>...</p>
+        </div>
+      </Layout>
     ),
   };
 }
+
+export default action;

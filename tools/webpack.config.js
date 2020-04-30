@@ -99,7 +99,7 @@ const config = {
             '@babel/preset-flow',
             // JSX
             // https://github.com/babel/babel/tree/master/packages/babel-preset-react
-            ['@babel/preset-react', { development: isDebug }],
+            ['@babel/preset-react', {development: isDebug}],
           ],
           plugins: [
             // Experimental ECMAScript proposals
@@ -247,13 +247,13 @@ const config = {
       ...(isDebug
         ? []
         : [
-            {
-              test: resolvePath(
-                'node_modules/react-deep-force-update/lib/index.js',
-              ),
-              loader: 'null-loader',
-            },
-          ]),
+          {
+            test: resolvePath(
+              'node_modules/react-deep-force-update/lib/index.js',
+            ),
+            loader: 'null-loader',
+          },
+        ]),
     ],
   },
 
@@ -310,10 +310,10 @@ const clientConfig = {
       output: `${BUILD_DIR}/asset-manifest.json`,
       publicPath: true,
       writeToDisk: true,
-      customize: ({ key, value }) => {
+      customize: ({key, value}) => {
         // You can prevent adding items to the manifest by returning false.
         if (key.toLowerCase().endsWith('.map')) return false;
-        return { key, value };
+        return {key, value};
       },
       done: (manifest, stats) => {
         // Write chunk-manifest.json.json
@@ -345,10 +345,10 @@ const clientConfig = {
     ...(isDebug
       ? []
       : [
-          // Webpack Bundle Analyzer
-          // https://github.com/th0r/webpack-bundle-analyzer
-          ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
-        ]),
+        // Webpack Bundle Analyzer
+        // https://github.com/th0r/webpack-bundle-analyzer
+        ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
+      ]),
   ],
 
   // Move modules that occur in multiple entry chunks to a new entry chunk (the commons chunk).
@@ -417,16 +417,16 @@ const serverConfig = {
               preset[0] !== '@babel/preset-env'
                 ? preset
                 : [
-                    '@babel/preset-env',
-                    {
-                      targets: {
-                        node: pkg.engines.node.match(/(\d+\.?)+/)[0],
-                      },
-                      modules: false,
-                      useBuiltIns: false,
-                      debug: false,
+                  '@babel/preset-env',
+                  {
+                    targets: {
+                      node: pkg.engines.node.match(/(\d+\.?)+/)[0],
                     },
-                  ],
+                    modules: false,
+                    useBuiltIns: false,
+                    debug: false,
+                  },
+                ],
             ),
           },
         };

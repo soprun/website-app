@@ -1,19 +1,21 @@
 import React from 'react';
-import Page from '../../components/Page';
+import Home from "./Home";
+import Layout from "../../components/Layout";
 
-const title = 'React Starter Kit';
+const title = 'React Single Page Application.';
+const description = 'Description...';
 
-async function action() {
+function action() {
   return {
     chunks: ['home'],
     title: title,
+    description: description,
     component: (
-      <Page>
-        <div>p</div>
-      </Page>
+      <Layout>
+        <Home title={title}/>
+      </Layout>
     ),
   };
 }
 
 export default action;
-

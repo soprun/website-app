@@ -39,7 +39,6 @@ const routes = {
       path: '/dashboard',
       load: () => import(/* webpackChunkName: 'dashboard' */ './dashboard'),
     },
-
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {
       path: '(.*)',
@@ -47,7 +46,7 @@ const routes = {
     },
   ],
 
-  async action({ next }) {
+  async action({next}) {
     // Execute each child route until one of them return the result
     const route = await next();
 

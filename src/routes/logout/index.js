@@ -3,11 +3,19 @@ import Layout from '../../components/Layout';
 
 const title = 'Log out';
 
-export default function action(context) {
+function action() {
   return {
     chunks: ['logout'],
-    title,
-    component: <Layout>logout</Layout>,
-    status: 404,
+    title: title,
+    component: (
+      <Layout>
+        <div>
+          <h1>{title}</h1>
+          <p>...</p>
+        </div>
+      </Layout>
+    ),
   };
 }
+
+export default action;
