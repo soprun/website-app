@@ -6,7 +6,7 @@ const title = 'Sign up';
 function action() {
   return {
     chunks: ['register'],
-    title: title,
+    title,
     component: (
       <Layout>
         <div>

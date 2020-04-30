@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Dashboard({title}) {
+export default function Dashboard({ title }) {
   return (
     <div>
       <h1>{title}</h1>

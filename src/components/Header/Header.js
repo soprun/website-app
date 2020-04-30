@@ -1,19 +1,17 @@
 import useStyles from 'isomorphic-style-loader/useStyles';
 import React from 'react';
+import { Layout, Menu } from 'antd';
 import s from './Header.css';
-import { Layout, Menu } from "antd";
-import Link from "../Link";
+import Link from '../Link';
 
 export default function Header() {
   useStyles(s);
   return (
     <Layout.Header>
-      <div className={s.logo}/>
+      <div className={s.logo} />
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
         <Menu.Item key="1">
-          <Link to="/about">
-            About
-          </Link>
+          <Link to="/about">About</Link>
         </Menu.Item>
         <Menu.Item key="2">
           <Link className={s.link} to="/dashboard">

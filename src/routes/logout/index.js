@@ -6,7 +6,7 @@ const title = 'Log out';
 function action() {
   return {
     chunks: ['logout'],
-    title: title,
+    title,
     component: (
       <Layout>
         <div>

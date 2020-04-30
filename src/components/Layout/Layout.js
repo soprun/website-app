@@ -4,18 +4,15 @@ import PropTypes from 'prop-types';
 import { Layout as LayoutApp } from 'antd';
 import antd from 'antd/dist/antd.css';
 import s from './Layout.css';
+import Header from '../Header';
 
-import Header from "../Header";
-
-export default function Layout({children}) {
+export default function Layout({ children }) {
   useStyles(antd, s);
   return (
     <LayoutApp className={s.layout}>
-      <Header/>
+      <Header />
       <LayoutApp.Content className={s.main}>
-        <div className={s.content}>
-          {children}
-        </div>
+        <div className={s.content}>{children}</div>
       </LayoutApp.Content>
       <LayoutApp.Footer className={s.footer}>
         Ant Design © 2018 Created by Ant UED

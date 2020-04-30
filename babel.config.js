@@ -26,12 +26,12 @@ module.exports = {
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
     [
-      "import",
+      'import',
       {
-        "libraryName": "antd",
-        "style": "css"
-      }
-    ]
+        libraryName: 'antd',
+        style: 'css',
+      },
+    ],
   ],
   ignore: ['node_modules', 'build'],
 };

@@ -6,7 +6,7 @@ const title = 'About page';
 function action() {
   return {
     chunks: ['about'],
-    title: title,
+    title,
     component: (
       <Layout>
         <div>

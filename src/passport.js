@@ -21,8 +21,8 @@ passport.use(
       User.findOne(
         {
           where: {
-            email: email,
-          }
+            email,
+          },
         },
         (err, user) => {
           // This is how you handle error

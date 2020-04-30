@@ -1,7 +1,10 @@
+// eslint-disable-next-line flowtype/no-types-missing-file-annotation
 import type { graphql as graphqType, GraphQLSchema } from 'graphql';
 
+// eslint-disable-next-line flowtype/no-types-missing-file-annotation
 type Fetch = (url: string, options: ?any) => Promise<any>;
 
+// eslint-disable-next-line flowtype/no-types-missing-file-annotation
 type Options = {
   baseUrl: string,
   cookie?: string,
