@@ -7,6 +7,7 @@ const User = Model.define(
     id: {
       type: DataType.UUIDV4,
       defaultValue: DataType.UUIDV4,
+      allowNull: false,
       primaryKey: true,
       unique: true,
       validate: {

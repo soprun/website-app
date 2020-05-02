@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
@@ -24,9 +25,11 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import config from './config';
 
 process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+  console.error('An error occurred, reason:', reason);
+
+  // console.error('Unhandled Rejection at:', p, 'reason:', reason);
   // send entire app down. Process manager will restart it
-  process.exit(1);
+  // process.exit(1);
 });
 
 //
@@ -49,7 +52,8 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session(config.session));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 //
@@ -59,45 +63,57 @@ app.use(
   expressJwt({
     secret: config.auth.jwt.secret,
     credentialsRequired: false,
-    getToken: req => req.cookies.id_token,
   }),
 );
+
 // Error handler for express-jwt
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
   if (err instanceof Jwt401Error) {
-    console.error('[express-jwt-error]', req.cookies.id_token);
+    console.error('[express-jwt-error]', req.cookies.jwt);
     // `clearCookie`, otherwise user can't use web-app until cookie expires
-    res.clearCookie('id_token');
+    res.clearCookie('jwt');
   }
   next(err);
 });
 
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.post(
-  '/login',
+  '/signIn',
   passport.authenticate('local', {
-    failureRedirect: '/login?state=failure',
-    session: false,
+    failureRedirect: '/signIn?signIn=failure',
+    session: true,
   }),
   (req, res) => {
-    const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, config.auth.jwt.secret, {
-      expiresIn,
-    });
-    res.cookie('id_token', token, {
-      maxAge: 1000 * expiresIn,
-      httpOnly: true,
-    });
-    res.redirect('/');
+    const token = jwt.sign(
+      {
+        id: req.user.id,
+        email: req.user.email,
+        admin: true,
+      },
+      config.auth.jwt.secret,
+      config.auth.jwt.options
+    );
+
+    res
+      .status(200)
+      .cookie('jwt', token, {
+        httpOnly: true
+      })
+      .send(token);
   },
 );
 
-app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
+app.get('/profile', (req, res, next) => {
+  res.json(req.user);
 });
+
+// app.get('/logout', (req, res) => {
+//   req.logout();
+//   res.redirect('/');
+// });
 
 //
 // Register API middleware
@@ -107,7 +123,7 @@ app.use(
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
-    rootValue: { request: req },
+    rootValue: {request: req},
     pretty: __DEV__,
   })),
 );
@@ -150,13 +166,13 @@ app.get('*', async (req, res, next) => {
       return;
     }
 
-    const data = { ...route };
+    const data = {...route};
     data.children = ReactDOM.renderToString(
       <App context={context} insertCss={insertCss}>
         {route.component}
       </App>,
     );
-    data.styles = [{ id: 'css', cssText: [...css].join('') }];
+    data.styles = [{id: 'css', cssText: [...css].join('')}];
 
     const scripts = new Set();
     const addChunk = chunk => {
@@ -197,9 +213,9 @@ app.use((err, req, res, next) => {
     <Html
       title="Internal Server Error"
       description={err.message}
-      styles={[{ id: 'css', cssText: errorPageStyle._getCss() }]} // eslint-disable-line no-underscore-dangle
+      styles={[{id: 'css', cssText: errorPageStyle._getCss()}]} // eslint-disable-line no-underscore-dangle
     >
-      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
+      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err}/>)}
     </Html>,
   );
   res.status(err.status || 500);

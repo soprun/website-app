@@ -9,7 +9,7 @@ const isLogin = false;
 function action() {
   if (!isLogin) {
     return {
-      redirect: '/login',
+      redirect: '/signIn',
     };
   }
 

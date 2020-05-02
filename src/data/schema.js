@@ -4,14 +4,21 @@ import {
 } from 'graphql';
 
 import me from './queries/me';
-import news from './queries/news';
+import signIn from './queries/signIn';
+import signUp from './queries/signUp';
 
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
     fields: {
       me,
-      news,
+      signIn,
+    },
+  }),
+  mutation: new ObjectType({
+    name: 'Mutation',
+    fields: {
+      signUp,
     },
   }),
 });

@@ -33,6 +33,10 @@ export default function Html({
             dangerouslySetInnerHTML={{ __html: style.cssText }}
           />
         ))}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.2.0/antd.css"
+        />
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{ __html: children }} />

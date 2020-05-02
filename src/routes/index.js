@@ -20,12 +20,12 @@ const routes = {
       load: () => import(/* webpackChunkName: 'home' */ './home'),
     },
     {
-      path: '/login',
-      load: () => import(/* webpackChunkName: 'login' */ './login'),
+      path: '/signIn',
+      load: () => import(/* webpackChunkName: 'signIn' */ './signIn'),
     },
     {
-      path: '/register',
-      load: () => import(/* webpackChunkName: 'register' */ './register'),
+      path: '/signUp',
+      load: () => import(/* webpackChunkName: 'signUp' */ './signUp'),
     },
     {
       path: '/logout',
@@ -53,7 +53,6 @@ const routes = {
     // Provide default values for title, description etc.
     route.title = `${route.title || 'Untitled Page'}`;
     route.description = route.description || '';
-    route.isLogin = route.isLogin || true;
 
     return route;
   },

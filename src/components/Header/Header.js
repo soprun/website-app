@@ -10,6 +10,9 @@ export default function Header() {
     <Layout.Header>
       <div className={s.logo} />
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+        <Menu.Item key="0">
+          <Link to="/">Home</Link>
+        </Menu.Item>
         <Menu.Item key="1">
           <Link to="/about">About</Link>
         </Menu.Item>
@@ -19,12 +22,12 @@ export default function Header() {
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link className={s.link} to="/login">
-            Log in
+          <Link className={s.link} to="/signIn">
+            Sign in
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link className={s.link} to="/register">
+          <Link className={s.link} to="/signUp">
             Sign up
           </Link>
         </Menu.Item>
