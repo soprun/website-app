@@ -2,7 +2,7 @@ import DataType from 'sequelize';
 import Model from '../sequelize';
 
 const User = Model.define(
-  'User',
+  'user',
   {
     id: {
       type: DataType.UUIDV4,
@@ -14,7 +14,6 @@ const User = Model.define(
         isUUID: 4,
       },
     },
-
     email: {
       type: DataType.STRING(255),
       allowNull: false,
@@ -23,12 +22,10 @@ const User = Model.define(
         isEmail: true,
       },
     },
-
     emailConfirmed: {
       type: DataType.BOOLEAN,
       defaultValue: false,
     },
-
     // TODO: move to UserLogin
     password: {
       type: DataType.STRING(64),

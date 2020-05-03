@@ -20,7 +20,8 @@ module.exports = {
   trustProxy: process.env.TRUST_PROXY || 'loopback',
 
   // default locale is the first one
-  locales: ['en-US', 'ru-RU'],
+  locale: 'en',
+  locales: ['en', 'ru'],
 
   // API Gateway
   api: {
