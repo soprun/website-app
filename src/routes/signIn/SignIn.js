@@ -34,7 +34,9 @@ function SignIn() {
       return response.text();
     }).then(token => {
       // Authorization: Bearer <token>
-      console.log(token);
+      // console.log(token);
+
+      location.reload();
     });
   };
 

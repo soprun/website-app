@@ -2,7 +2,7 @@ import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import session from 'express-session';
+//import session from 'express-session';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
@@ -52,7 +52,7 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(session(config.session));
+// app.use(session(config.session));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
@@ -78,13 +78,13 @@ app.use((err, req, res, next) => {
 });
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.post(
   '/signIn',
   passport.authenticate('local', {
     failureRedirect: '/signIn?signIn=failure',
-    session: true,
+    session: false,
   }),
   (req, res) => {
     const token = jwt.sign(
@@ -106,9 +106,12 @@ app.post(
   },
 );
 
-app.get('/profile', (req, res, next) => {
-  res.json(req.user);
-});
+app.get('/profile',
+  passport.authenticate('jwt', {session: false}),
+  (req, res, next) => {
+    res.json(req.user);
+  }
+);
 
 // app.get('/logout', (req, res) => {
 //   req.logout();
@@ -120,6 +123,7 @@ app.get('/profile', (req, res, next) => {
 // -----------------------------------------------------------------------------
 app.use(
   '/graphql',
+  passport.authenticate('jwt', {session: false}),
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,

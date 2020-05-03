@@ -6,24 +6,24 @@
 
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as JWTStrategy } from 'passport-jwt';
 import { User } from './data/models';
 import config from "./config";
 
 
-passport.serializeUser((user, done) => {
-  console.log('serializeUser', user)
-  done(null, user.id);
-});
-
-passport.deserializeUser((user, done) => {
-  User.findOne({where: {id}})
-    .then((user) => {
-      console.log('deserializeUser', user)
-      done(null, user);
-      return null;
-    });
-});
+// passport.serializeUser((user, done) => {
+//   console.log('serializeUser', user)
+//   done(null, user.id);
+// });
+//
+// passport.deserializeUser((user, done) => {
+//   User.findOne({where: {id}})
+//     .then((user) => {
+//       console.log('deserializeUser', user)
+//       done(null, user);
+//       return null;
+//     });
+// });
 
 /**
  * Sign in
@@ -61,14 +61,32 @@ passport.use(
   ),
 );
 
+const cookieExtractor = req => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['jwt'];
+  }
+  return token;
+};
+
+// jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+
 passport.use(
   new JWTStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: cookieExtractor,
       secretOrKey: config.auth.jwt.secret
     },
     (payload, done) => {
-      console.log('JWTStrategy', payload)
+      User.findOne({
+        where: {
+          id: payload.id,
+        },
+      }).then(user => {
+        return done(null, user);
+      }).catch(err => {
+        return done(err);
+      });
     }
   )
 );
