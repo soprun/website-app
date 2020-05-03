@@ -14,8 +14,12 @@ const Subscription = Model.define(
         isUUID: 4,
       },
     },
+    // isAvailable: {
+    //   type: DataType.BOOLEAN,
+    //   defaultValue: true,
+    // },
     // начало срока действия
-    beginning: {
+    start: {
       type: DataType.DATE,
       defaultValue: null,
       allowNull: false,
