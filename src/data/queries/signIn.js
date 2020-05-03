@@ -1,9 +1,5 @@
-import {
-  GraphQLError,
-  GraphQLNonNull as NonNull,
-  GraphQLString as StringType,
-} from 'graphql';
-import UserType from '../types/UserType';
+import { GraphQLError, GraphQLNonNull as NonNull, GraphQLString as StringType, } from 'graphql';
+import { UserType } from '../types/UserType';
 import { User } from '../models';
 
 const signIn = {

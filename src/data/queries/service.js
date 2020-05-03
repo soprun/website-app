@@ -18,7 +18,7 @@ export const service = {
   },
 };
 
-export const services = {
+export const serviceAll = {
   type: new GraphQLList(ServiceType),
   resolve(root, args) {
     return Service.findAll()
@@ -34,5 +34,8 @@ export const serviceInput = {
     }
   },
   resolve(root, args) {
+    return Service.create({
+      ...args.input
+    }).then(result => result);
   },
 };

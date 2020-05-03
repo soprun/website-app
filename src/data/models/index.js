@@ -3,28 +3,20 @@ import Service from './Service';
 import Subscriber from './Subscriber';
 import Subscription from './Subscription';
 import User from './User';
-import UserProfile from './UserProfile';
 
-User.hasOne(UserProfile, {
-  foreignKey: 'userId',
-  as: 'profile',
+// Billing
+User.hasOne(Subscriber, {
+  foreignKey: 'id',
+  as: 'subscriber',
   onUpdate: 'cascade',
   onDelete: 'cascade',
 });
 
-// Billing
-// Subscriber.hasOne(User, {
-//   foreignKey: 'userId',
-//   as: 'user',
-//   onUpdate: 'cascade',
-//   onDelete: 'set null',
-// });
-
 Subscription.belongsTo(Subscriber, {
   foreignKey: 'subscriberId',
   as: 'subscriber',
-  // onUpdate: 'cascade',
-  // onDelete: 'set null',
+  onUpdate: 'cascade',
+  onDelete: 'set null',
 })
 
 Subscription.belongsTo(Service, {
@@ -41,7 +33,6 @@ function sync(...args) {
 export default {sync};
 export {
   User,
-  UserProfile,
   Service,
   Subscriber,
   Subscription,

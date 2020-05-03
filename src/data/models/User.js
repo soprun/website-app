@@ -26,6 +26,16 @@ const User = Model.define(
       type: DataType.BOOLEAN,
       defaultValue: false,
     },
+    phone: {
+      type: DataType.STRING(50),
+      allowNull: true,
+      unique: true,
+    },
+    language: {
+      type: DataType.STRING(10),
+      allowNull: false,
+      defaultValue: 'en',
+    },
     // TODO: move to UserLogin
     password: {
       type: DataType.STRING(64),

@@ -15,7 +15,6 @@ const fields = {
 
 export const SubscriptionType = new GraphQLObjectType({
   name: 'Subscription',
-  description: 'Подписка',
   fields: {
     id: {
       type: new GraphQLNonNull(GraphQLID),

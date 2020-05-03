@@ -3,18 +3,45 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Mutation {
-  signUp(email: String!, password: String!): User
+  serviceInput(input: ServiceInput!): Service
 }
 
 type Query {
-  me: User
-  signIn(email: String!, password: String!): User
+  service(id: ID!): Service
+  service_all: [Service]
+  subscriber(id: ID!): Subscriber
+  subscriber_all: [Subscriber]
+}
+
+type Service {
+  description: String!
+  id: ID!
+  name: String!
+}
+
+type Subscriber {
+  id: ID!
+  subscription: [Subscription]
+  user: User
+}
+
+type Subscription {
+  expiration: String
+  id: ID!
+  service: Service!
+  start: String!
 }
 
 type User {
   email: String!
   id: ID!
+}
+
+input ServiceInput {
+  description: String!
+  name: String!
 }

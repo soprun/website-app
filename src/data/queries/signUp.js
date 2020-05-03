@@ -1,7 +1,6 @@
 import { GraphQLNonNull as NonNull, GraphQLString as StringType, } from 'graphql';
-import UserType from '../types/UserType';
-import { User } from '../models';
-import UserProfile from "../models/UserProfile";
+import { UserType } from '../types/UserType';
+import { Subscriber, User } from '../models';
 
 const signUp = {
   type: UserType,
@@ -17,18 +16,16 @@ const signUp = {
     return User.create({
       email: email,
       password: password,
-      emailConfirmed: false,
-      profile: {
-        language: 'en',
-      }
+      language: 'en',
+      subscriber: {}
     }, {
       include: [
         {
-          model: UserProfile,
-          as: 'profile'
+          model: Subscriber,
+          as: 'subscriber'
         },
       ],
-    }).then(user => user);
+    }).then(result => result);
   },
 };
 
