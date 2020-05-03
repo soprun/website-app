@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
 import { Service } from "../models";
 import { ServiceInput, ServiceType } from "../types/ServiceType";
 
@@ -15,6 +15,14 @@ export const service = {
         id: args.id,
       },
     }).then(result => result);
+  },
+};
+
+export const services = {
+  type: new GraphQLList(ServiceType),
+  resolve(root, args) {
+    return Service.findAll()
+      .then(result => result);
   },
 };
 
