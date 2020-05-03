@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
 import { SubscriberInput, SubscriberType } from "../types/SubscriberType";
-import { ServiceInput, ServiceType } from "../types/ServiceType";
-import { Service, Subscriber } from "../models";
+import { Subscriber } from "../models";
+import User from "../models/User";
 
 export const subscriber = {
   type: SubscriberType,
@@ -17,8 +17,17 @@ export const subscriber = {
 
 export const subscriberAll = {
   type: new GraphQLList(SubscriberType),
-  resolve(root, args) {
-    console.log(args.id)
+  resolve() {
+    return Subscriber.findAll({
+      include: [
+        {
+          model: User,
+          as: 'user',
+          required: true
+        }
+      ],
+    })
+      .then(result => result);
   },
 };
 

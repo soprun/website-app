@@ -36,6 +36,8 @@ const User = Model.define(
       allowNull: false,
       defaultValue: 'en',
     },
+    // gender male / female
+
     // TODO: move to UserLogin
     password: {
       type: DataType.STRING(64),

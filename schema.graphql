@@ -7,14 +7,17 @@ schema {
 }
 
 type Mutation {
-  serviceInput(input: ServiceInput!): Service
+  service(input: ServiceInput!): Service
+  subscriber(input: SubscriberInput!): Subscriber
 }
 
 type Query {
   service(id: ID!): Service
-  service_all: [Service]
+  serviceAll: [Service]
+  signIn(email: String!, password: String!): User
+  signUp(email: String!, password: String!): User
   subscriber(id: ID!): Subscriber
-  subscriber_all: [Subscriber]
+  subscriberAll: [Subscriber]
 }
 
 type Service {
@@ -39,9 +42,20 @@ type Subscription {
 type User {
   email: String!
   id: ID!
+  language: language!
+  phone: String!
+}
+
+enum language {
+  en
+  ru
 }
 
 input ServiceInput {
   description: String!
   name: String!
+}
+
+input SubscriberInput {
+  userId: ID!
 }

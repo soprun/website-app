@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '../../components/Layout';
+import { PageHeader } from "antd";
 
 const title = 'Sign up';
 
@@ -9,10 +10,7 @@ function action() {
     title,
     component: (
       <Layout>
-        <div>
-          <h1>{title}</h1>
-          <p>...</p>
-        </div>
+        <PageHeader title={title} subTitle="This is a subtitle"/>
       </Layout>
     ),
   };

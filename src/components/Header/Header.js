@@ -22,19 +22,29 @@ export default function Header() {
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
+          <Link className={s.link} to="/subscription">
+            Subscription
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="4">
           <Link className={s.link} to="/signIn">
             Sign in
           </Link>
         </Menu.Item>
-        <Menu.Item key="4">
+        <Menu.Item key="5">
           <Link className={s.link} to="/signUp">
             Sign up
           </Link>
         </Menu.Item>
-        <Menu.Item key="5">
-          <Link className={s.link} to="/logout">
-            Log out
-          </Link>
+        {/*<Menu.Item key="6">*/}
+        {/*  <Link className={s.link} to="/logout">*/}
+        {/*    Log out*/}
+        {/*  </Link>*/}
+        {/*</Menu.Item>*/}
+        <Menu.Item key="6">
+          <a className={s.link} href="/graphql" target="_blank">
+            GraphQL
+          </a>
         </Menu.Item>
       </Menu>
     </Layout.Header>
