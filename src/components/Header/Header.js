@@ -41,11 +41,6 @@ export default function Header() {
         {/*    Log out*/}
         {/*  </Link>*/}
         {/*</Menu.Item>*/}
-        <Menu.Item key="6">
-          <a className={s.link} href="/graphql" target="_blank">
-            GraphQL
-          </a>
-        </Menu.Item>
       </Menu>
     </Layout.Header>
   );

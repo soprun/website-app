@@ -5,7 +5,26 @@ const count = 10;
 const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat&noinfo`;
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&name=';
 
-const subscriptionQuery = ``
+const subscriptionQuery = `
+query ScratchQuery {
+    subscriberAll {
+        id
+        user {
+            email
+            phone
+            language
+        }
+    }
+}
+`
+
+const loadingData = {
+  loading: true,
+  name: {},
+  user: {
+    email: ''
+  }
+};
 
 class Subscription extends React.Component {
   state = {
@@ -16,39 +35,33 @@ class Subscription extends React.Component {
   };
 
   componentDidMount() {
-    this.getData(res => {
+    this.getData(response => {
       this.setState({
         initLoading: false,
-        data: res.results,
-        list: res.results,
+        data: response.subscriberAll,
+        list: response.subscriberAll,
       });
     });
   }
 
   getData = callback => {
-    fetch(fakeDataUrl, {
-      method: 'GET',
-      redirect: 'manual',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    }).then(response => {
+    fetch('/graphql?query=' + subscriptionQuery).then(response => {
       return response.json();
     }).then(response => {
-      callback(response);
+      callback(response.data);
     })
   };
 
   onLoadMore = () => {
     this.setState({
       loading: true,
-      list: this.state.data.concat([...new Array(count)].map(() => ({loading: true, name: {}}))),
+      list: this.state.data.concat(
+        [...new Array(count)].map(() => (loadingData))
+      ),
     });
 
     this.getData(response => {
-      const data = this.state.data.concat(response.results);
-
-      console.log(data);
+      const data = this.state.data.concat(response.subscriberAll);
 
       this.setState(
         {
@@ -69,17 +82,16 @@ class Subscription extends React.Component {
   render() {
     const {initLoading, loading, list} = this.state;
 
-    const loadMore =
-      !initLoading && !loading ? (
-        <div style={{
-          textAlign: 'center',
-          marginTop: 12,
-          height: 32,
-          lineHeight: '32px',
-        }}>
-          <Button onClick={this.onLoadMore}>loading more</Button>
-        </div>
-      ) : null;
+    const loadMore = !initLoading && !loading ? (
+      <div style={{
+        textAlign: 'center',
+        marginTop: 12,
+        height: 32,
+        lineHeight: '32px',
+      }}>
+        <Button onClick={this.onLoadMore}>loading more</Button>
+      </div>
+    ) : null;
 
     return (
       <List
@@ -96,10 +108,10 @@ class Subscription extends React.Component {
             <Skeleton avatar title={true} loading={item.loading} active>
               <List.Item.Meta
                 avatar={
-                  <Avatar size="large" src={avatarUrl + item.email}/>
+                  <Avatar size="large" src={avatarUrl + item.user.email}/>
                 }
-                title={item.name.last}
-                description='description...'
+                title={item.user.email}
+                description={JSON.stringify(item)}
               />
               {/*<div>content</div>*/}
             </Skeleton>
