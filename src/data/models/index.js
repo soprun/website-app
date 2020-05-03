@@ -1,17 +1,16 @@
 import sequelize from '../sequelize';
+import Service from './Service';
+import Subscriber from './Subscriber';
+import Subscription from './Subscription';
 import User from './User';
 import UserProfile from './UserProfile';
-// Billing
-import Subscriber from './billing/Subscriber';
-import Service from './billing/Service';
-import Subscription from './billing/Subscription';
 
-// User.hasOne(UserProfile, {
-//   foreignKey: 'userId',
-//   as: 'profile',
-//   onUpdate: 'cascade',
-//   onDelete: 'cascade',
-// });
+User.hasOne(UserProfile, {
+  foreignKey: 'userId',
+  as: 'profile',
+  onUpdate: 'cascade',
+  onDelete: 'cascade',
+});
 
 // Billing
 // Subscriber.hasOne(User, {
@@ -24,11 +23,15 @@ import Subscription from './billing/Subscription';
 Subscription.belongsTo(Subscriber, {
   foreignKey: 'subscriberId',
   as: 'subscriber',
+  // onUpdate: 'cascade',
+  // onDelete: 'set null',
 })
 
 Subscription.belongsTo(Service, {
   foreignKey: 'serviceId',
   as: 'service',
+  // onUpdate: 'cascade',
+  // onDelete: 'set null',
 })
 
 function sync(...args) {
