@@ -2,7 +2,6 @@ import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-//import session from 'express-session';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
@@ -52,7 +51,6 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-// app.use(session(config.session));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
@@ -78,7 +76,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use(passport.initialize());
-// app.use(passport.session());
 
 app.post(
   '/signIn',
@@ -91,18 +88,24 @@ app.post(
       {
         id: req.user.id,
         email: req.user.email,
-        admin: true,
       },
       config.auth.jwt.secret,
       config.auth.jwt.options
     );
+
+    const output = jwt.verify(
+      token,
+      config.auth.jwt.secret
+    )
+
+    output.token = token;
 
     res
       .status(200)
       .cookie('jwt', token, {
         httpOnly: true
       })
-      .send(token);
+      .json(output);
   },
 );
 
@@ -135,73 +138,83 @@ app.use(
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
-app.get('*', async (req, res, next) => {
-  try {
-    const css = new Set();
+app.get('*',
+  passport.authenticate('jwt', {session: false}),
+  async (req, res, next) => {
+    try {
+      const css = new Set();
 
-    // Enables critical path CSS rendering
-    // https://github.com/kriasoft/isomorphic-style-loader
-    const insertCss = (...styles) => {
-      // eslint-disable-next-line no-underscore-dangle
-      styles.forEach(style => css.add(style._getCss()));
-    };
+      // Enables critical path CSS rendering
+      // https://github.com/kriasoft/isomorphic-style-loader
+      const insertCss = (...styles) => {
+        // eslint-disable-next-line no-underscore-dangle
+        styles.forEach(style => css.add(style._getCss()));
+      };
 
-    // Universal HTTP client
-    const fetch = createFetch(nodeFetch, {
-      baseUrl: config.api.serverUrl,
-      cookie: req.headers.cookie,
-      schema,
-      graphql,
-    });
+      // Universal HTTP client
+      const fetch = createFetch(nodeFetch, {
+        baseUrl: config.api.serverUrl,
+        cookie: req.headers.cookie,
+        schema,
+        graphql,
+      });
 
-    // Global (context) variables that can be easily accessed from any React component
-    // https://facebook.github.io/react/docs/context.html
-    const context = {
-      fetch,
-      // The twins below are wild, be careful!
-      pathname: req.path,
-      query: req.query,
-    };
+      // Global (context) variables that can be easily accessed from any React component
+      // https://facebook.github.io/react/docs/context.html
+      const context = {
+        fetch,
+        // The twins below are wild, be careful!
+        pathname: req.path,
+        query: req.query,
+      };
 
-    const route = await router.resolve(context);
+      const route = await router.resolve(context);
 
-    if (route.redirect) {
-      res.redirect(route.status || 302, route.redirect);
-      return;
-    }
-
-    const data = {...route};
-    data.children = ReactDOM.renderToString(
-      <App context={context} insertCss={insertCss}>
-        {route.component}
-      </App>,
-    );
-    data.styles = [{id: 'css', cssText: [...css].join('')}];
-
-    const scripts = new Set();
-    const addChunk = chunk => {
-      if (chunks[chunk]) {
-        chunks[chunk].forEach(asset => scripts.add(asset));
-      } else if (__DEV__) {
-        throw new Error(`Chunk with name '${chunk}' cannot be found`);
+      if (route.redirect) {
+        res.redirect(route.status || 302, route.redirect);
+        return;
       }
-    };
-    addChunk('client');
-    if (route.chunk) addChunk(route.chunk);
-    if (route.chunks) route.chunks.forEach(addChunk);
 
-    data.scripts = Array.from(scripts);
-    data.app = {
-      apiUrl: config.api.clientUrl,
-    };
+      // todo: server-side rendering check isAuthenticated
+      // if (route.isAuthenticated) {
+      //   passport.authenticate('jwt', {
+      //     failureRedirect: '/signIn?signIn=failure'
+      //   })(req, res);
+      //   return;
+      // }
 
-    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
-    res.status(route.status || 200);
-    res.send(`<!doctype html>${html}`);
-  } catch (err) {
-    next(err);
-  }
-});
+      const data = {...route};
+      data.children = ReactDOM.renderToString(
+        <App context={context} insertCss={insertCss}>
+          {route.component}
+        </App>,
+      );
+      data.styles = [{id: 'css', cssText: [...css].join('')}];
+
+      const scripts = new Set();
+      const addChunk = chunk => {
+        if (chunks[chunk]) {
+          chunks[chunk].forEach(asset => scripts.add(asset));
+        } else if (__DEV__) {
+          throw new Error(`Chunk with name '${chunk}' cannot be found`);
+        }
+      };
+      addChunk('client');
+      if (route.chunk) addChunk(route.chunk);
+      if (route.chunks) route.chunks.forEach(addChunk);
+
+      data.scripts = Array.from(scripts);
+      data.app = {
+        apiUrl: config.api.clientUrl,
+      };
+
+      const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+      res.status(route.status || 200);
+      res.send(`<!doctype html>${html}`);
+    } catch (err) {
+      next(err);
+    }
+  });
 
 //
 // Error handling

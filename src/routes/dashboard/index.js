@@ -4,20 +4,14 @@ import Dashboard from './Dashboard';
 
 const title = 'Dashboard';
 const description = 'Description...';
-const isLogin = false;
+const isAuthenticated = true;
 
 function action() {
-  if (!isLogin) {
-    return {
-      redirect: '/signIn',
-    };
-  }
-
   return {
     chunks: ['dashboard'],
     title,
     description,
-    isLogin,
+    isAuthenticated,
     component: (
       <Layout>
         <Dashboard title={title} />

@@ -31,11 +31,11 @@ function SignIn() {
       },
       body: JSON.stringify(values),
     }).then(response => {
-      return response.text();
+      return response.json();
     }).then(token => {
       // Authorization: Bearer <token>
-      // console.log(token);
-
+      // console.log(data);
+      localStorage.setItem('jwt_token', JSON.stringify(token));
       location.reload();
     });
   };

@@ -53,6 +53,7 @@ const routes = {
     // Provide default values for title, description etc.
     route.title = `${route.title || 'Untitled Page'}`;
     route.description = route.description || '';
+    route.isAuthenticated = route.isAuthenticated || false;
 
     return route;
   },
