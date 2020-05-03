@@ -1,32 +1,29 @@
-import {
-  GraphQLID as ID,
-  GraphQLNonNull as NonNull,
-  GraphQLObjectType as ObjectType,
-  GraphQLString as StringType,
-} from 'graphql';
+import { GraphQLNonNull, GraphQLObjectType, GraphQLString, } from 'graphql';
 
-const UserProfileType = new ObjectType({
+const fields = {
+  displayName: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  picture: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  gender: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  location: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  language: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  website: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+};
+
+export const UserProfileType = new GraphQLObjectType({
   name: 'UserProfile',
   fields: {
-    displayName: {
-      type: new NonNull(StringType),
-    },
-    picture: {
-      type: new NonNull(StringType),
-    },
-    gender: {
-      type: new NonNull(StringType),
-    },
-    location: {
-      type: new NonNull(StringType),
-    },
-    language: {
-      type: new NonNull(StringType),
-    },
-    website: {
-      type: new NonNull(StringType),
-    },
+    ...fields
   },
 });
-
-export default UserProfileType;

@@ -1,24 +1,19 @@
-import {
-  GraphQLObjectType as ObjectType,
-  GraphQLSchema as Schema,
-} from 'graphql';
-
-import me from './queries/me';
-import signIn from './queries/signIn';
-import signUp from './queries/signUp';
+import { GraphQLObjectType as ObjectType, GraphQLSchema as Schema, } from 'graphql';
+import { service, serviceInput } from './queries/service';
+import { subscriber } from './queries/subscriber';
 
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
     fields: {
-      me,
-      signIn,
+      service,
+      subscriber,
     },
   }),
   mutation: new ObjectType({
     name: 'Mutation',
     fields: {
-      signUp,
+      serviceInput,
     },
   }),
 });

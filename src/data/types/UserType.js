@@ -1,20 +1,22 @@
 import {
-  GraphQLID as ID,
-  GraphQLNonNull as NonNull,
-  GraphQLObjectType as ObjectType,
-  GraphQLString as StringType,
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
 } from 'graphql';
 
-const UserType = new ObjectType({
+const fields = {
+  email: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+};
+
+export const UserType = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: {
-      type: new NonNull(ID),
+      type: new GraphQLNonNull(GraphQLID),
     },
-    email: {
-      type: new NonNull(StringType),
-    },
+    ...fields
   },
 });
-
-export default UserType;

@@ -126,7 +126,7 @@ app.get('/profile',
 // -----------------------------------------------------------------------------
 app.use(
   '/graphql',
-  passport.authenticate('jwt', {session: false}),
+  // passport.authenticate('jwt', {session: false}),
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
@@ -139,7 +139,7 @@ app.use(
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
 app.get('*',
-  passport.authenticate('jwt', {session: false}),
+  // passport.authenticate('jwt', {session: false}),
   async (req, res, next) => {
     try {
       const css = new Set();
