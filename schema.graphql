@@ -6,6 +6,12 @@ schema {
   subscription: Subscription
 }
 
+interface UserInterface {
+  email: String!
+  language: language!
+  phone: String
+}
+
 type Mutation {
   service(input: ServiceInput!): Service
   subscriber(input: SubscriberInput!): Subscriber
@@ -17,7 +23,7 @@ type Query {
   signIn(email: String!, password: String!): User
   signUp(email: String!, password: String!): User
   subscriber(id: ID!): Subscriber
-  subscriberAll: [Subscriber]
+  subscriberAll(limit: Int = 10, offset: Int = 0): [Subscriber]
 }
 
 type Service {
@@ -26,10 +32,12 @@ type Service {
   name: String!
 }
 
-type Subscriber {
+type Subscriber implements UserInterface {
+  email: String!
   id: ID!
+  language: language!
+  phone: String
   subscription: [Subscription]
-  user: User
 }
 
 type Subscription {
@@ -39,11 +47,11 @@ type Subscription {
   start: String!
 }
 
-type User {
+type User implements UserInterface {
   email: String!
   id: ID!
   language: language!
-  phone: String!
+  phone: String
 }
 
 enum language {

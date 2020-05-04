@@ -1,4 +1,11 @@
-import { GraphQLEnumType, GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString, } from 'graphql';
+import {
+  GraphQLEnumType,
+  GraphQLID,
+  GraphQLInterfaceType,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
 
 export const languageType = new GraphQLEnumType({
   name: 'language',
@@ -12,7 +19,7 @@ export const languageType = new GraphQLEnumType({
   }
 });
 
-const fields = {
+export const UserFields = {
   email: {
     type: new GraphQLNonNull(GraphQLString),
   },
@@ -24,12 +31,22 @@ const fields = {
   }
 };
 
+export const UserInterfaceType = new GraphQLInterfaceType({
+  name: 'UserInterface',
+  fields: {
+    ...UserFields
+  }
+});
+
 export const UserType = new GraphQLObjectType({
   name: 'User',
+  interfaces: [
+    UserInterfaceType
+  ],
   fields: {
     id: {
       type: new GraphQLNonNull(GraphQLID),
     },
-    ...fields
+    ...UserFields
   },
 });

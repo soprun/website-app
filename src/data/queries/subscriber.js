@@ -1,6 +1,6 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
 import { SubscriberInput, SubscriberType } from "../types/SubscriberType";
-import { Subscriber } from "../models";
+import { Subscriber, Subscription } from "../models";
 import User from "../models/User";
 
 export const subscriber = {
@@ -17,17 +17,44 @@ export const subscriber = {
 
 export const subscriberAll = {
   type: new GraphQLList(SubscriberType),
-  resolve() {
+  args: {
+    offset: {
+      type: GraphQLInt,
+      defaultValue: 0
+    },
+    limit: {
+      type: GraphQLInt,
+      defaultValue: 10
+    }
+  },
+  resolve(root, args) {
     return Subscriber.findAll({
+      offset: args.offset,
+      limit: args.limit,
       include: [
         {
           model: User,
           as: 'user',
           required: true
+        },
+        {
+          model: Subscription,
+          as: 'subscription',
+          required: false
         }
       ],
     })
-      .then(result => result);
+      .then(result => {
+        return result.map((subscriber) => {
+          return {
+            id: subscriber.id,
+            email: subscriber.user.email,
+            phone: subscriber.user.phone,
+            language: subscriber.user.language,
+            subscription: subscriber.subscription
+          }
+        })
+      });
   },
 };
 

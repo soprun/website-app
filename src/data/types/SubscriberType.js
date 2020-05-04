@@ -1,20 +1,21 @@
 import { GraphQLID, GraphQLInputObjectType, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { UserType } from "./UserType";
+import { UserFields, UserInterfaceType } from "./UserType";
 import { SubscriptionType } from "./SubscriptionType";
 
-const fields = {
-  user: {
-    type: UserType
-  },
+const SubscriberFields = {
+  ...UserFields
 };
 
 export const SubscriberType = new GraphQLObjectType({
   name: 'Subscriber',
+  interfaces: [
+    UserInterfaceType
+  ],
   fields: {
     id: {
       type: new GraphQLNonNull(GraphQLID),
     },
-    ...fields,
+    ...SubscriberFields,
     subscription: {
       type: new GraphQLList(SubscriptionType),
     }
