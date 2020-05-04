@@ -3,7 +3,6 @@ import { Form, Input, Modal, Radio } from 'antd';
 
 export const CollectionEdit = ({visible, confirmLoading, defaultValue, onHandler, onCancel}) => {
   const [form] = Form.useForm();
-  console.log('defaultValue', defaultValue)
 
   const layout = {
     labelCol: {span: 8},

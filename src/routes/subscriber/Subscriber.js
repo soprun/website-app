@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, List, Skeleton } from "antd";
+import { Avatar, Button, Descriptions, List, Skeleton } from "antd";
 import { CollectionEdit } from "./CollectionEdit";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
@@ -13,7 +13,7 @@ query subscriberQuery($offset: Int, $limit: Int) {
     phone
     phoneConfirmed
     firstName
-    language
+    lastName
     gender
     language
     website
@@ -190,11 +190,11 @@ class Subscriber extends React.Component {
               <Skeleton avatar title={true} loading={item.loading} active>
                 <List.Item.Meta
                   avatar={
-                    <Avatar size="large" src={avatarUrl + item.email}/>
+                    <Avatar size="large" src={avatarUrl + item.firstName + '+' + item.lastName}/>
                   }
-                  title={item.email}
-                  //title={<a href={item.href}>{item.title}</a>}
-                  description={JSON.stringify(item)}
+                  title={item.firstName + ' ' + item.lastName}
+                  description={item.email}
+                  // description={JSON.stringify(item)}
                 />
                 {/*<div>content</div>*/}
               </Skeleton>
