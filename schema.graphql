@@ -20,7 +20,7 @@ interface UserInterface {
 
 type Mutation {
   service(input: ServiceInput!): Service
-  subscriber(id: ID, input: SubscriberInput!): Subscriber
+  subscriber(input: SubscriberInput!): Subscriber
 }
 
 type Query {
@@ -87,6 +87,7 @@ input SubscriberInput {
   emailConfirmed: Boolean!
   firstName: String
   gender: String!
+  id: ID
   language: language!
   lastName: String
   phone: String

@@ -1,11 +1,12 @@
 import React from "react";
-import { Avatar, Button, List, Skeleton } from "antd";
-import { CollectionEdit } from "./CollectionEdit";
+import { Avatar, Button, List, PageHeader, Skeleton } from "antd";
+import { SubscriberForm } from "./SubscriberForm";
+import collection from "../../utils/collection";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
-const count = 10;
-const query = `
-query subscriberQuery($offset: Int, $limit: Int) {
+
+const subscriberAllQuery = `
+query subscriberAllQuery($offset: Int, $limit: Int) {
   subscriberAll(offset: $offset, limit: $limit) {
     id
     email
@@ -20,49 +21,79 @@ query subscriberQuery($offset: Int, $limit: Int) {
   }
 }
 `;
+const subscriberMutation = `
+mutation subscriberMutation(
+  $id: ID,
+  $email: String!,
+  $emailConfirmed: Boolean!,
+  $firstName: String,
+  $gender: String!,
+  $language: language!,
+  $lastName: String,
+  $phone: String,
+  $phoneConfirmed: Boolean!,
+  $website: String
+) {
+  subscriber(input: {
+    id: $id,
+    email: $email,
+    emailConfirmed: $emailConfirmed,
+    firstName: $firstName,
+    lastName: $lastName
+    gender: $gender,
+    language: $language,
+    phone: $phone,
+    phoneConfirmed: $phoneConfirmed,
+    website: $website
+  }) {
+    id
+    email
+    emailConfirmed
+    phone
+    phoneConfirmed
+    firstName
+    lastName
+    gender
+    language
+    website
+  }
+}
+`;
 
-const layoutForm = {
-  labelCol: {
-    span: 8
-  },
-  wrapperCol: {
-    span: 16
-  },
-};
+const subscriberAll = new collection(subscriberAllQuery);
 
-const loadingData = {
-  loading: true,
-  id: null,
-  email: null,
-  phone: null,
-  language: null,
-};
-
-class Subscriber extends React.Component {
+export class Subscriber extends React.Component {
   state = {
-    initLoading: true,
+    init: true,
     loading: false,
     data: [],
     list: [],
     offset: 0,
-    limit: count,
-
+    limit: 10,
+    editValue: {},
     editVisible: false,
     editConfirmLoading: false,
   };
 
   componentDidMount() {
-    this.getData(response => {
-      this.setState({
-        initLoading: false,
-        data: response,
-        list: response,
-        offset: this.state.limit,
-      });
-    });
+
+    const res = subscriberAll.fetchAll(1);
+      console.log(res);
+
+    // this.getCollection(
+    //   subscriberAllQuery,
+    //   {},
+    //   response => {
+    //     this.setState({
+    //       init: false,
+    //       // data: response,
+    //       collection: response,
+    //       offset: this.state.limit,
+    //     });
+    //   })
   }
 
-  getData = callback => {
+  getCollection = (query, variables, callback) => {
     fetch('/graphql', {
       method: 'POST',
       headers: {
@@ -74,6 +105,7 @@ class Subscriber extends React.Component {
         variables: {
           offset: this.state.offset,
           limit: this.state.limit,
+          ...variables
         },
       })
     }).then(response => {
@@ -81,124 +113,68 @@ class Subscriber extends React.Component {
     }).then(response => {
       callback(response.data.subscriberAll);
     })
-  };
-
-  onCollectionLoad = () => {
-    this.setState({
-      loading: true,
-      list: this.state.data.concat(
-        [...new Array(this.state.limit)].map(() => (loadingData))
-      ),
-    });
-
-    this.getData(response => {
-      let loading = false;
-
-      if (!response.length) {
-        loading = true;
-      }
-
-      const data = this.state.data.concat(response);
-
-      this.setState(
-        {
-          data,
-          list: data,
-          loading: loading,
-          offset: this.state.offset + this.state.limit,
-        },
-        () => {
-          // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-          // In real scene, you can using public method of react-virtualized:
-          // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-          window.dispatchEvent(new Event('resize'));
-        },
-      );
-    });
-  };
-
-  onEditVisible = (value) => {
-    this.setState({
-      editValue: value,
-      editVisible: true,
-      editConfirmLoading: false,
-    });
   }
 
-  onEditHandler = (values) => {
-    // console.log('Received values of form: ', values);
-
+  showEdit = (item) => {
     this.setState({
-      editConfirmLoading: true,
-    });
-
-    fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables: values,
-      })
-    }).then(response => {
-      return response.json();
-    }).then(response => {
-      console.log(response.data.subscriberAll);
+      editValue: item || {},
+      editVisible: true
     })
   }
 
-  onEditCancel = () => {
+  onEditHandleOk = (values) => {
+    this.setState({
+      editConfirmLoading: true,
+    })
+  };
+
+  onEditHandleCancel = () => {
     this.setState({
       editValue: {},
       editVisible: false,
-      editConfirmLoading: false,
-    });
-  }
+    })
+  };
 
   render() {
     const {
-      initLoading,
+      init,
       loading,
-      list,
-
+      collection,
       editValue,
       editVisible,
-      editConfirmLoading
+      editConfirmLoading,
     } = this.state;
-
-    const loadMore = !initLoading && !loading ? (
-      <div style={{
-        textAlign: 'center',
-        marginTop: 12,
-        height: 32,
-        lineHeight: '32px',
-      }}>
-        <Button onClick={this.onCollectionLoad}>loading more</Button>
-      </div>
-    ) : null;
 
     return (
       <>
-        <CollectionEdit
+        <PageHeader
+          title={this.props.title}
+          subTitle={this.props.subTitle}
+          extra={
+            <Button type="ghost" onClick={() => {
+              this.showEdit()
+            }}>
+              Create subscriber
+            </Button>
+          }
+        />
+        <SubscriberForm
+          value={editValue}
           visible={editVisible}
           confirmLoading={editConfirmLoading}
-          defaultValue={editValue}
-          onHandler={this.onEditHandler}
-          onCancel={this.onEditCancel}
+          onCreate={this.onEditHandleOk}
+          onCancel={this.onEditHandleCancel}
         />
         <List
-          loading={initLoading}
+          loading={init}
           itemLayout="horizontal"
           size="large"
-          loadMore={loadMore}
-          dataSource={list}
+          dataSource={collection}
           renderItem={item => (
             <List.Item
               key={item.id}
               actions={[
-                <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
+                <Button type="primary" onClick={e => this.showEdit(item, e)}>
                   edit
                 </Button>,
                 <Button type="dashed">
@@ -212,9 +188,7 @@ class Subscriber extends React.Component {
                   }
                   title={item.firstName + ' ' + item.lastName}
                   description={item.email}
-                  // description={JSON.stringify(item)}
                 />
-                {/*<div>content</div>*/}
               </Skeleton>
             </List.Item>
           )}
@@ -223,5 +197,3 @@ class Subscriber extends React.Component {
     );
   }
 }
-
-export default Subscriber

@@ -2,6 +2,43 @@ import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
 import { SubscriberInput, SubscriberType } from "../types/SubscriberType";
 import { Subscriber, Subscription, UserProfile } from "../models";
 import User from "../models/User";
+import GraphQLResolve from "../../utils/GraphQLResolve";
+
+const GQResolve = new GraphQLResolve(Subscriber, [
+  {
+    model: User,
+    as: 'user',
+    required: true,
+    include: [
+      {
+        model: UserProfile,
+        as: 'profile',
+        required: true,
+      }
+    ]
+  },
+  {
+    model: Subscription,
+    as: 'subscription',
+    required: false
+  }
+]);
+
+function GraphQLResolveSerialize(Subscriber: Class<Subscriber>) {
+  return {
+    id: Subscriber.id,
+    email: Subscriber.user.email,
+    emailConfirmed: Subscriber.user.emailConfirmed,
+    firstName: Subscriber.user.profile.firstName,
+    lastName: Subscriber.user.profile.lastName,
+    phone: Subscriber.user.profile.phone,
+    phoneConfirmed: Subscriber.user.profile.phoneConfirmed,
+    gender: Subscriber.user.profile.gender,
+    language: Subscriber.user.profile.language,
+    website: Subscriber.user.profile.website,
+    subscription: Subscriber.subscription
+  }
+}
 
 export const subscriber = {
   type: SubscriberType,
@@ -11,7 +48,10 @@ export const subscriber = {
     }
   },
   resolve(root, args) {
-    console.log(args.id)
+    return GQResolve
+      .init(args)
+      .find()
+      .then(result => GraphQLResolveSerialize(result));
   },
 };
 
@@ -28,45 +68,11 @@ export const subscriberAll = {
     }
   },
   resolve(root, args) {
-    return Subscriber.findAll({
-      offset: args.offset,
-      limit: args.limit,
-      include: [
-        {
-          model: User,
-          as: 'user',
-          required: true,
-          include: [
-            {
-              model: UserProfile,
-              as: 'profile',
-              required: true,
-            }
-          ]
-        },
-        {
-          model: Subscription,
-          as: 'subscription',
-          required: false
-        }
-      ],
-    })
+    return GQResolve
+      .init(args)
+      .findAll()
       .then(result => {
-        return result.map((result) => {
-          return {
-            id: result.id,
-            email: result.user.email,
-            emailConfirmed: result.user.emailConfirmed,
-            firstName: result.user.profile.firstName,
-            lastName: result.user.profile.lastName,
-            phone: result.user.profile.phone,
-            phoneConfirmed: result.user.profile.phoneConfirmed,
-            gender: result.user.profile.gender,
-            language: result.user.profile.language,
-            website: result.user.profile.website,
-            subscription: result.subscription
-          }
-        })
+        return result.map((result) => GraphQLResolveSerialize(result))
       });
   },
 };
@@ -74,16 +80,14 @@ export const subscriberAll = {
 export const subscriberInput = {
   type: SubscriberType,
   args: {
-    id: {
-      type: GraphQLID
-    },
     input: {
       type: new GraphQLNonNull(SubscriberInput)
     }
   },
-  resolve(root, args) {
-    return Subscriber.create({
-      ...args.input
-    }).then(result => result);
+  resolve: function (root, args) {
+    return GQResolve
+      .init(args)
+      .find()
+      .then(result => GraphQLResolveSerialize(result));
   },
 };
