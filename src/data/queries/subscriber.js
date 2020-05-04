@@ -74,6 +74,9 @@ export const subscriberAll = {
 export const subscriberInput = {
   type: SubscriberType,
   args: {
+    id: {
+      type: GraphQLID
+    },
     input: {
       type: new GraphQLNonNull(SubscriberInput)
     }

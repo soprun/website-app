@@ -25,8 +25,6 @@ export const SubscriberType = new GraphQLObjectType({
 export const SubscriberInput = new GraphQLInputObjectType({
   name: 'SubscriberInput',
   fields: {
-    userId: {
-      type: new GraphQLNonNull(GraphQLID),
-    }
+    ...SubscriberFields,
   }
 });

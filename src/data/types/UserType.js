@@ -50,6 +50,15 @@ export const UserFields = {
   },
 };
 
+// export const UserFieldsConfirmed = {
+//   emailConfirmed: {
+//     type: new GraphQLNonNull(GraphQLBoolean),
+//   },
+//   phoneConfirmed: {
+//     type: new GraphQLNonNull(GraphQLBoolean),
+//   },
+// };
+
 export const UserInterfaceType = new GraphQLInterfaceType({
   name: 'UserInterface',
   fields: {

@@ -47,26 +47,16 @@ export const CollectionEdit = ({visible, confirmLoading, defaultValue, onHandler
         <Form.Item name="lastName" label="Last name">
           <Input/>
         </Form.Item>
-        <Form.Item name="gender" label="Gender" rules={[
-          {
-            required: true,
-            message: 'Please input your gender!'
-          }
-        ]}>
-          <Radio.Group>
-            <Radio.Button value="male" defaultChecked>Male</Radio.Button>
-            <Radio.Button value="female">Female</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
         <Form.Item name="language" label="Language" rules={[{
           required: true,
           message: 'Please input your language!'
         }]}>
-          <Select placeholder="Select a option and change input text above">
+          <Select placeholder="Select a option and change input text above" allowClear>
             <Select.Option value="en">English</Select.Option>
             <Select.Option value="ru">Russian</Select.Option>
             <Select.Option value="kg">Kongo</Select.Option>
             <Select.Option value="uz">Uzbek</Select.Option>
+            <Select.Option value="unknown">unknown</Select.Option>
           </Select>
         </Form.Item>
         <Divider>User contacts</Divider>

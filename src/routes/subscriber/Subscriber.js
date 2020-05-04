@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, Descriptions, List, Skeleton } from "antd";
+import { Avatar, Button, List, Skeleton } from "antd";
 import { CollectionEdit } from "./CollectionEdit";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
@@ -126,15 +126,32 @@ class Subscriber extends React.Component {
   }
 
   onEditHandler = (values) => {
-    console.log('Received values of form: ', values);
+    // console.log('Received values of form: ', values);
 
-    // this.setState({
-    //   editVisible: false,
-    // });
+    this.setState({
+      editConfirmLoading: true,
+    });
+
+    fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: values,
+      })
+    }).then(response => {
+      return response.json();
+    }).then(response => {
+      console.log(response.data.subscriberAll);
+    })
   }
 
   onEditCancel = () => {
     this.setState({
+      editValue: {},
       editVisible: false,
       editConfirmLoading: false,
     });
@@ -145,6 +162,7 @@ class Subscriber extends React.Component {
       initLoading,
       loading,
       list,
+
       editValue,
       editVisible,
       editConfirmLoading
