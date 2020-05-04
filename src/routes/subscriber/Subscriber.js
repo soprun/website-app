@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, Button, List, Skeleton } from "antd";
+import { CollectionEdit } from "./CollectionEdit";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
 const count = 10;
@@ -8,8 +9,14 @@ query subscriberQuery($offset: Int, $limit: Int) {
   subscriberAll(offset: $offset, limit: $limit) {
     id
     email
+    emailConfirmed
     phone
+    phoneConfirmed
+    firstName
     language
+    gender
+    language
+    website
   }
 }
 `;
@@ -39,13 +46,13 @@ class Subscriber extends React.Component {
     list: [],
     offset: 0,
     limit: count,
-    editLine: {},
+
     editVisible: false,
     editConfirmLoading: false,
   };
 
   componentDidMount() {
-    this.getCollection(response => {
+    this.getData(response => {
       this.setState({
         initLoading: false,
         data: response,
@@ -55,7 +62,7 @@ class Subscriber extends React.Component {
     });
   }
 
-  getCollection = callback => {
+  getData = callback => {
     fetch('/graphql', {
       method: 'POST',
       headers: {
@@ -110,47 +117,37 @@ class Subscriber extends React.Component {
     });
   };
 
-  onEditVisible = (item) => {
+  onEditVisible = (value) => {
     this.setState({
-      editLine: item,
+      editValue: value,
       editVisible: true,
+      editConfirmLoading: false,
     });
   }
 
-  onEditHandleOk = () => {
-    this.setState({
-      initLoading: true,
-      editConfirmLoading: true,
-    });
-
-    // console.log(this.state)
-
-    setTimeout(() => {
-      this.setState({
-        editVisible: false,
-        editConfirmLoading: false,
-      });
-    }, 3000);
-  }
-
-  onEditHandleCancel = () => {
-    this.setState({
-      editVisible: false,
-    });
-  }
-
-  onCreate = values => {
+  onEditHandler = (values) => {
     console.log('Received values of form: ', values);
+
+    // this.setState({
+    //   editVisible: false,
+    // });
+  }
+
+  onEditCancel = () => {
     this.setState({
       editVisible: false,
+      editConfirmLoading: false,
     });
-  };
+  }
 
   render() {
     const {
       initLoading,
       loading,
       list,
+      editValue,
+      editVisible,
+      editConfirmLoading
     } = this.state;
 
     const loadMore = !initLoading && !loading ? (
@@ -165,37 +162,46 @@ class Subscriber extends React.Component {
     ) : null;
 
     return (
-      <List
-        loading={initLoading}
-        itemLayout="horizontal"
-        size="large"
-        loadMore={loadMore}
-        dataSource={list}
-        renderItem={item => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
-                edit
-              </Button>,
-              <Button type="dashed">
-                more
-              </Button>,
-            ]}>
-            <Skeleton avatar title={true} loading={item.loading} active>
-              <List.Item.Meta
-                avatar={
-                  <Avatar size="large" src={avatarUrl + item.email}/>
-                }
-                title={item.email}
-                //title={<a href={item.href}>{item.title}</a>}
-                description={JSON.stringify(item)}
-              />
-              {/*<div>content</div>*/}
-            </Skeleton>
-          </List.Item>
-        )}
-      />
+      <>
+        <CollectionEdit
+          visible={editVisible}
+          confirmLoading={editConfirmLoading}
+          defaultValue={editValue}
+          onHandler={this.onEditHandler}
+          onCancel={this.onEditCancel}
+        />
+        <List
+          loading={initLoading}
+          itemLayout="horizontal"
+          size="large"
+          loadMore={loadMore}
+          dataSource={list}
+          renderItem={item => (
+            <List.Item
+              key={item.id}
+              actions={[
+                <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
+                  edit
+                </Button>,
+                <Button type="dashed">
+                  more
+                </Button>,
+              ]}>
+              <Skeleton avatar title={true} loading={item.loading} active>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar size="large" src={avatarUrl + item.email}/>
+                  }
+                  title={item.email}
+                  //title={<a href={item.href}>{item.title}</a>}
+                  description={JSON.stringify(item)}
+                />
+                {/*<div>content</div>*/}
+              </Skeleton>
+            </List.Item>
+          )}
+        />
+      </>
     );
   }
 }

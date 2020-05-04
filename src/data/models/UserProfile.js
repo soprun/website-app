@@ -11,20 +11,17 @@ const UserProfile = Model.define(
     },
     firstName: {
       type: DataType.STRING(100),
-      allowNull: false,
     },
     lastName: {
       type: DataType.STRING(100),
-      allowNull: false,
-    },
-    emailConfirmed: {
-      type: DataType.BOOLEAN,
-      defaultValue: false,
     },
     phone: {
       type: DataType.STRING(50),
-      allowNull: true,
-      unique: true,
+    },
+    phoneConfirmed: {
+      type: DataType.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
     },
     gender: {
       type: DataType.ENUM('unknown', 'male', 'female'),

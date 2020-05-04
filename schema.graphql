@@ -8,8 +8,14 @@ schema {
 
 interface UserInterface {
   email: String!
+  emailConfirmed: Boolean!
+  firstName: String
+  gender: String!
   language: language!
+  lastName: String
   phone: String
+  phoneConfirmed: Boolean!
+  website: String
 }
 
 type Mutation {
@@ -34,10 +40,16 @@ type Service {
 
 type Subscriber implements UserInterface {
   email: String!
+  emailConfirmed: Boolean!
+  firstName: String
+  gender: String!
   id: ID!
   language: language!
+  lastName: String
   phone: String
+  phoneConfirmed: Boolean!
   subscription: [Subscription]
+  website: String
 }
 
 type Subscription {
@@ -49,9 +61,15 @@ type Subscription {
 
 type User implements UserInterface {
   email: String!
+  emailConfirmed: Boolean!
+  firstName: String
+  gender: String!
   id: ID!
   language: language!
+  lastName: String
   phone: String
+  phoneConfirmed: Boolean!
+  website: String
 }
 
 enum language {

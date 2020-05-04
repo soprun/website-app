@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
 import { SubscriberInput, SubscriberType } from "../types/SubscriberType";
-import { Subscriber, Subscription } from "../models";
+import { Subscriber, Subscription, UserProfile } from "../models";
 import User from "../models/User";
 
 export const subscriber = {
@@ -35,7 +35,14 @@ export const subscriberAll = {
         {
           model: User,
           as: 'user',
-          required: true
+          required: true,
+          include: [
+            {
+              model: UserProfile,
+              as: 'profile',
+              required: true,
+            }
+          ]
         },
         {
           model: Subscription,
@@ -45,13 +52,19 @@ export const subscriberAll = {
       ],
     })
       .then(result => {
-        return result.map((subscriber) => {
+        return result.map((result) => {
           return {
-            id: subscriber.id,
-            email: subscriber.user.email,
-            phone: subscriber.user.phone,
-            language: subscriber.user.language,
-            subscription: subscriber.subscription
+            id: result.id,
+            email: result.user.email,
+            emailConfirmed: result.user.emailConfirmed,
+            firstName: result.user.profile.firstName,
+            lastName: result.user.profile.lastName,
+            phone: result.user.profile.phone,
+            phoneConfirmed: result.user.profile.phoneConfirmed,
+            gender: result.user.profile.gender,
+            language: result.user.profile.language,
+            website: result.user.profile.website,
+            subscription: result.subscription
           }
         })
       });
