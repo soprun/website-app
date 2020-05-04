@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, List, Skeleton } from "antd";
+import { Avatar, Button, List, Modal, Skeleton } from "antd";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
 const count = 10;
@@ -28,10 +28,11 @@ class Subscription extends React.Component {
     loading: false,
     data: [],
     list: [],
-    variables: {
-      offset: 0,
-      limit: count,
-    }
+    offset: 0,
+    limit: count,
+    editItem: {},
+    editVisible: false,
+    editConfirmLoading: false,
   };
 
   componentDidMount() {
@@ -40,10 +41,7 @@ class Subscription extends React.Component {
         initLoading: false,
         data: response.subscriberAll,
         list: response.subscriberAll,
-        variables: {
-          offset: count,
-          limit: count,
-        }
+        offset: this.state.limit,
       });
     });
   }
@@ -57,7 +55,10 @@ class Subscription extends React.Component {
       },
       body: JSON.stringify({
         query,
-        variables: this.state.variables,
+        variables: {
+          offset: this.state.offset,
+          limit: this.state.limit,
+        },
       })
     }).then(response => {
       return response.json();
@@ -66,11 +67,25 @@ class Subscription extends React.Component {
     })
   };
 
+  onLoadCollection = (offset) => {
+    // this.getData(response => {
+    //   this.setState({
+    //     initLoading: false,
+    //     data: response.subscriberAll,
+    //     list: response.subscriberAll,
+    //     variables: {
+    //       offset: 0,
+    //       limit: count,
+    //     }
+    //   });
+    // });
+  }
+
   onLoadMore = () => {
     this.setState({
       loading: true,
       list: this.state.data.concat(
-        [...new Array(count)].map(() => (loadingData))
+        [...new Array(this.state.limit)].map(() => (loadingData))
       ),
     });
 
@@ -88,10 +103,7 @@ class Subscription extends React.Component {
           data,
           list: data,
           loading: loading,
-          variables: {
-            offset: this.state.variables.offset + count,
-            limit: count,
-          }
+          offset: this.state.offset + this.state.limit,
         },
         () => {
           // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
@@ -103,19 +115,37 @@ class Subscription extends React.Component {
     });
   };
 
-  showDeleteConfirm = (id) => {
-    confirm({
-      title: 'Do you want to delete these items?',
-      content: 'When clicked the OK button, this dialog will be closed after 1 second',
-      onOk() {
-        console.log(id)
-      },
+  onEditVisible = (item) => {
+    this.setState({
+      editItem: item,
+      editVisible: true,
     });
   }
 
+  onEditHandleOk = (item) => {
+    this.setState({
+      initLoading: true,
+      editConfirmLoading: true,
+    });
+
+    console.log(this.state.editItem)
+
+    setTimeout(() => {
+      this.setState({
+        editVisible: false,
+        editConfirmLoading: false,
+      });
+    }, 3000);
+  }
+
+  onEditHandleCancel = () => {
+    this.setState({
+      editVisible: false,
+    });
+  }
 
   render() {
-    const {initLoading, loading, list} = this.state;
+    const {initLoading, loading, list, editItem, editVisible, editConfirmLoading} = this.state;
 
     const loadMore = !initLoading && !loading ? (
       <div style={{
@@ -129,31 +159,49 @@ class Subscription extends React.Component {
     ) : null;
 
     return (
-      <List
-        loading={initLoading}
-        itemLayout="horizontal"
-        size="large"
-        loadMore={loadMore}
-        dataSource={list}
-        renderItem={item => (
-          <List.Item
-            actions={[
-              <a key="list-loadmore-edit">edit</a>,
-              <a key="list-loadmore-more">more</a>,
-            ]}>
-            <Skeleton avatar title={true} loading={item.loading} active>
-              <List.Item.Meta
-                avatar={
-                  <Avatar size="large" src={avatarUrl + item.email}/>
-                }
-                title={item.email}
-                description={JSON.stringify(item)}
-              />
-              {/*<div>content</div>*/}
-            </Skeleton>
-          </List.Item>
-        )}
-      />
+      <>
+        <Modal
+          title={editItem.email}
+          visible={editVisible}
+          onOk={this.onEditHandleOk}
+          confirmLoading={editConfirmLoading}
+          onCancel={this.onEditHandleCancel}>
+          <p>ModalText</p>
+        </Modal>
+        <List
+          loading={initLoading}
+          itemLayout="horizontal"
+          size="large"
+          loadMore={loadMore}
+          dataSource={list}
+          renderItem={item => (
+            <>
+              <List.Item
+                key={item.id}
+                actions={[
+                  <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
+                    edit
+                  </Button>,
+                  <Button type="dashed">
+                    more
+                  </Button>,
+                ]}>
+                <Skeleton avatar title={true} loading={item.loading} active>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar size="large" src={avatarUrl + item.email}/>
+                    }
+                    title={item.email}
+                    //title={<a href={item.href}>{item.title}</a>}
+                    description={JSON.stringify(item)}
+                  />
+                  {/*<div>content</div>*/}
+                </Skeleton>
+              </List.Item>
+            </>
+          )}
+        />
+      </>
     );
   }
 }
