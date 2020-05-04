@@ -40,8 +40,8 @@ const routes = {
       load: () => import(/* webpackChunkName: 'dashboard' */ './dashboard'),
     },
     {
-      path: '/subscription',
-      load: () => import(/* webpackChunkName: 'subscription' */ './subscription'),
+      path: '/subscriber',
+      load: () => import(/* webpackChunkName: 'subscriber' */ './subscriber'),
     },
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {

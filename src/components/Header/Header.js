@@ -22,8 +22,8 @@ export default function Header() {
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link className={s.link} to="/subscription">
-            Subscription
+          <Link className={s.link} to="/subscriber">
+            Subscriber
           </Link>
         </Menu.Item>
         <Menu.Item key="4">

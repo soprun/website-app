@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, List, Modal, Skeleton } from "antd";
+import { Avatar, Button, List, Skeleton } from "antd";
 
 const avatarUrl = 'https://eu.ui-avatars.com/api/?background=1890ff&color=fff&size=128&format=svg&name=';
 const count = 10;
@@ -12,7 +12,16 @@ query subscriberQuery($offset: Int, $limit: Int) {
     language
   }
 }
-`
+`;
+
+const layoutForm = {
+  labelCol: {
+    span: 8
+  },
+  wrapperCol: {
+    span: 16
+  },
+};
 
 const loadingData = {
   loading: true,
@@ -22,7 +31,7 @@ const loadingData = {
   language: null,
 };
 
-class Subscription extends React.Component {
+class Subscriber extends React.Component {
   state = {
     initLoading: true,
     loading: false,
@@ -30,23 +39,23 @@ class Subscription extends React.Component {
     list: [],
     offset: 0,
     limit: count,
-    editItem: {},
+    editLine: {},
     editVisible: false,
     editConfirmLoading: false,
   };
 
   componentDidMount() {
-    this.getData(response => {
+    this.getCollection(response => {
       this.setState({
         initLoading: false,
-        data: response.subscriberAll,
-        list: response.subscriberAll,
+        data: response,
+        list: response,
         offset: this.state.limit,
       });
     });
   }
 
-  getData = callback => {
+  getCollection = callback => {
     fetch('/graphql', {
       method: 'POST',
       headers: {
@@ -63,25 +72,11 @@ class Subscription extends React.Component {
     }).then(response => {
       return response.json();
     }).then(response => {
-      callback(response.data);
+      callback(response.data.subscriberAll);
     })
   };
 
-  onLoadCollection = (offset) => {
-    // this.getData(response => {
-    //   this.setState({
-    //     initLoading: false,
-    //     data: response.subscriberAll,
-    //     list: response.subscriberAll,
-    //     variables: {
-    //       offset: 0,
-    //       limit: count,
-    //     }
-    //   });
-    // });
-  }
-
-  onLoadMore = () => {
+  onCollectionLoad = () => {
     this.setState({
       loading: true,
       list: this.state.data.concat(
@@ -92,11 +87,11 @@ class Subscription extends React.Component {
     this.getData(response => {
       let loading = false;
 
-      if (!response.subscriberAll.length) {
+      if (!response.length) {
         loading = true;
       }
 
-      const data = this.state.data.concat(response.subscriberAll);
+      const data = this.state.data.concat(response);
 
       this.setState(
         {
@@ -117,18 +112,18 @@ class Subscription extends React.Component {
 
   onEditVisible = (item) => {
     this.setState({
-      editItem: item,
+      editLine: item,
       editVisible: true,
     });
   }
 
-  onEditHandleOk = (item) => {
+  onEditHandleOk = () => {
     this.setState({
       initLoading: true,
       editConfirmLoading: true,
     });
 
-    console.log(this.state.editItem)
+    // console.log(this.state)
 
     setTimeout(() => {
       this.setState({
@@ -144,8 +139,19 @@ class Subscription extends React.Component {
     });
   }
 
+  onCreate = values => {
+    console.log('Received values of form: ', values);
+    this.setState({
+      editVisible: false,
+    });
+  };
+
   render() {
-    const {initLoading, loading, list, editItem, editVisible, editConfirmLoading} = this.state;
+    const {
+      initLoading,
+      loading,
+      list,
+    } = this.state;
 
     const loadMore = !initLoading && !loading ? (
       <div style={{
@@ -154,56 +160,44 @@ class Subscription extends React.Component {
         height: 32,
         lineHeight: '32px',
       }}>
-        <Button onClick={this.onLoadMore}>loading more</Button>
+        <Button onClick={this.onCollectionLoad}>loading more</Button>
       </div>
     ) : null;
 
     return (
-      <>
-        <Modal
-          title={editItem.email}
-          visible={editVisible}
-          onOk={this.onEditHandleOk}
-          confirmLoading={editConfirmLoading}
-          onCancel={this.onEditHandleCancel}>
-          <p>ModalText</p>
-        </Modal>
-        <List
-          loading={initLoading}
-          itemLayout="horizontal"
-          size="large"
-          loadMore={loadMore}
-          dataSource={list}
-          renderItem={item => (
-            <>
-              <List.Item
-                key={item.id}
-                actions={[
-                  <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
-                    edit
-                  </Button>,
-                  <Button type="dashed">
-                    more
-                  </Button>,
-                ]}>
-                <Skeleton avatar title={true} loading={item.loading} active>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar size="large" src={avatarUrl + item.email}/>
-                    }
-                    title={item.email}
-                    //title={<a href={item.href}>{item.title}</a>}
-                    description={JSON.stringify(item)}
-                  />
-                  {/*<div>content</div>*/}
-                </Skeleton>
-              </List.Item>
-            </>
-          )}
-        />
-      </>
+      <List
+        loading={initLoading}
+        itemLayout="horizontal"
+        size="large"
+        loadMore={loadMore}
+        dataSource={list}
+        renderItem={item => (
+          <List.Item
+            key={item.id}
+            actions={[
+              <Button type="primary" onClick={e => this.onEditVisible(item, e)}>
+                edit
+              </Button>,
+              <Button type="dashed">
+                more
+              </Button>,
+            ]}>
+            <Skeleton avatar title={true} loading={item.loading} active>
+              <List.Item.Meta
+                avatar={
+                  <Avatar size="large" src={avatarUrl + item.email}/>
+                }
+                title={item.email}
+                //title={<a href={item.href}>{item.title}</a>}
+                description={JSON.stringify(item)}
+              />
+              {/*<div>content</div>*/}
+            </Skeleton>
+          </List.Item>
+        )}
+      />
     );
   }
 }
 
-export default Subscription
+export default Subscriber

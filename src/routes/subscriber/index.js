@@ -1,18 +1,19 @@
 import React from 'react';
 import { PageHeader } from 'antd';
 import Layout from '../../components/Layout';
-import Subscription from "./Subscription";
+import Subscriber from "./Subscriber";
 
-const title = 'Subscription list';
+const title = 'Subscriber list';
+const subTitle = 'This is a subtitle...';
 
 function action() {
   return {
-    chunks: ['subscription'],
+    chunks: ['subscriber'],
     title,
     component: (
       <Layout>
-        <PageHeader title={title} subTitle="This is a subtitle"/>
-        <Subscription/>
+        <PageHeader title={title} subTitle={subTitle}/>
+        <Subscriber/>
       </Layout>
     ),
   };
