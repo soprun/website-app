@@ -2,6 +2,9 @@ import { GraphQLError, GraphQLNonNull as NonNull, GraphQLString as StringType, }
 import { UserType } from '../types/UserType';
 import { User } from '../models';
 
+/**
+ * @deprecated
+ */
 const signIn = {
   type: UserType,
   args: {

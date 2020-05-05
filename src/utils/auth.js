@@ -25,8 +25,8 @@
 // const currentUserSubject = JSON.parse(localStorage.getItem('currentUser'));
 // localStorage.setItem('currentUser', JSON.stringify(user));
 
-export const auth = {
-  currentUser() {
-    return 'currentUser';
-  }
-};
+// export const auth = {
+//   currentUser() {
+//     return 'currentUser';
+//   }
+// };

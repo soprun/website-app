@@ -76,44 +76,22 @@ export class Subscriber extends React.Component {
   };
 
   componentDidMount() {
-
-    const res = subscriberAll.fetchAll(1);
-      console.log(res);
-
-    // this.getCollection(
-    //   subscriberAllQuery,
-    //   {},
-    //   response => {
-    //     this.setState({
-    //       init: false,
-    //       // data: response,
-    //       collection: response,
-    //       offset: this.state.limit,
-    //     });
-    //   })
+    subscriberAll.fetchAll(
+      this.state.offset,
+      this.state.limit
+    ).then(response => {
+      this.setState({
+        init: false,
+        data: response.data.subscriberAll,
+        collection: response.data.subscriberAll,
+        offset: this.state.limit,
+      });
+    });
   }
 
-  getCollection = (query, variables, callback) => {
-    fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables: {
-          offset: this.state.offset,
-          limit: this.state.limit,
-          ...variables
-        },
-      })
-    }).then(response => {
-      return response.json();
-    }).then(response => {
-      callback(response.data.subscriberAll);
-    })
-  }
+// .then(response => {
+//   callback(response.data.subscriberAll);
+// })
 
   showEdit = (item) => {
     this.setState({
