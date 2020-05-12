@@ -13,6 +13,8 @@ export GPG_SECRET_PASSPHRASE=${GPG_SECRET_PASSPHRASE:-secret}
 # Decrypt the file
 #mkdir $HOME/secrets
 
+ls -la "$HOME/gcloud"
+
 # --batch to prevent interactive command --yes to assume "yes" for questions
 gpg \
   --quiet \
