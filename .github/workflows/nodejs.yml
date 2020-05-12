@@ -77,5 +77,19 @@ jobs:
           name: code-coverage-report
           path: coverage
 
-# env:
-#   NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  secret:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run command
+        shell: bash
+        env:
+          SUPER_SECRET: ${{ secrets.SuperSecret }}
+        run: |
+          ./gcloud/env-secret.sh "%SUPER_SECRET%"
