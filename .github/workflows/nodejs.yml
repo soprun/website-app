@@ -42,17 +42,23 @@ jobs:
     - name: Run build --release
       run: yarn run build --release
 
-    - name: Run test
-      run: yarn run test
-
-    - name: Run test coverage
-      run: yarn run test-cover
-
     - name: Archive production artifacts
       uses: actions/upload-artifact@v1
       with:
         name: build
         path: build
+
+    - name: Find problematic patterns in code
+      run: yarn run lint
+
+    - name: Flow static type checker in code
+      run: yarn run flow check
+
+    - name: Run unit tests once
+      run: yarn run test
+
+    - name: Run unit tests coverage
+      run: yarn run test-cover
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v1
