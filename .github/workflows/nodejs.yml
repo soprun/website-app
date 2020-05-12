@@ -39,11 +39,11 @@ jobs:
     - name: Run build release
       run: yarn run build --release --if-present
 
-    - name: Archive production artifacts
+    - name: Archive build production artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: dist
-        path: dist
+        name: build
+        path: build
    
     - name: Archive code coverage results
       uses: actions/upload-artifact@v1
