@@ -2,37 +2,74 @@
 
 source ./env.sh
 
-# printenv | sort
-# exit;
+#printenv | sort;exit;
 
-# Configure: Google Kubernetes Engine (GKE)
+# Create Google Kubernetes Engine (GKE)
 
-GKE_CLUSTER_NAME="sandbox_cluster"
+tags="\
+default-allow-ssh,\
+default-allow-http,\
+default-allow-https\
+"
+scopes="\
+storage-ro,\
+logging-write,\
+monitoring,\
+service-control,\
+service-management,\
+trace\
+"
+metadata="\
+disable-legacy-endpoints=true\
+"
+addons="\
+HttpLoadBalancing,\
+HorizontalPodAutoscaling,\
+NetworkPolicy,\
+GcePersistentDiskCsiDriver\
+"
 
-number_nodes=3 # default=3 The number of nodes to be created in each of the cluster's zones.
-min_nodes_size=0
-max_nodes_size=3
+git commit \
+  --quiet \
+  --all \
+  --gpg-sign=${ID_GPG_KEY} \
+  --message "clusters create: ${GKE_CLUSTER_NAME}"
 
-max_surge_upgrade=1
-max_unavailable_upgrade=0
-
-gcloud container clusters create ${GKE_CLUSTER_NAME} \
-  --zone=${GKE_CLUSTER_LOCATION} \
+gcloud beta container clusters create ${GKE_CLUSTER_NAME} --project ${GCP_PROJECT_ID} \
+  --async \
+  --zone ${GKE_CLUSTER_LOCATION} \
+  --no-enable-basic-auth \
+  --release-channel regular \
   --workload-pool ${GKE_WORKLOAD_IDENTITY} \
-  --num-nodes ${number_nodes} \
-  --min-nodes ${min_nodes_size}\
-  --max-nodes ${max_nodes_size} \
-  --max-surge-upgrade ${max_surge_upgrade} \
-  --max-unavailable-upgrade ${max_unavailable_upgrade} \
+  --machine-type ${GKE_MACHINE_TYPE} \
+  --image-type ${GKE_IMAGE_TYPE} \
+  --disk-type ${GKE_DISK_TYPE} \
+  --disk-size ${GKE_DISK_SIZE} \
+  --metadata ${metadata} \
+  --tags ${tags} \
+  --scopes ${scopes} \
+  --addons ${addons} \
   --enable-ip-alias \
-  --create-subnetwork "name=${GKE_CLUSTER_SUBNETWORK_NAME},range=${GKE_CLUSTER_SUBNETWORK_RANGE}" \
   --enable-autorepair \
   --enable-autoupgrade \
   --enable-autoscaling \
+  --autoscaling-profile optimize-utilization \
   --enable-stackdriver-kubernetes \
   --enable-intra-node-visibility \
   --enable-network-policy \
+  --enable-shielded-nodes \
+  --enable-resource-consumption-metering \
+  --enable-pod-security-policy \
+  --num-nodes ${GKE_CLUSTER_NUMBER_NODES} \
+  --default-max-pods-per-node ${GKE_CLUSTER_MAXIMUM_PODS_PER_NODE} \
+  --min-nodes ${GKE_CLUSTER_MINIMUM_NUMBER_NODES}\
+  --max-nodes ${GKE_CLUSTER_MAXIMUM_NUMBER_NODES} \
+  --max-surge-upgrade ${GKE_CLUSTER_MAXIMUM_SURGE_UPGRADE} \
+  --max-unavailable-upgrade ${GKE_CLUSTER_MAXIMUM_UNAVAILABLE_UPGRADE} \
   --shielded-integrity-monitoring \
   --shielded-secure-boot \
   --resource-usage-bigquery-dataset "cluster_usage_metering" \
-  --enable-resource-consumption-metering
+  --security-group "gke-security-groups@soprun.com"
+
+gcloud container clusters describe ${GKE_CLUSTER_NAME} \
+  --format yaml >> "tmp/cluster-describe-${GKE_CLUSTER_NAME}.yaml"
