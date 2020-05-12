@@ -28,17 +28,27 @@ export GKE_DISK_SIZE=${GKE_DISK_SIZE:-100}
 # export GKE_CLUSTER_NUMBER_NODES=3 # min number nodes: 3
 # cluster-ipv4-cidr=10.0.0.0/21 \
 # export GKE_CLUSTER_IPV4_CIDR=${GKE_CLUSTER_MASTER_IP:10.156.0.0/16}
-export GKE_CLUSTER_SUBNETWORK_NAME="${GKE_APP_NAME}-subnet"
-export GKE_CLUSTER_SUBNETWORK_RANGE="10.156.0.0/21"
 
+# see: https://www.ipaddressguide.com/cidr
+# Classless Inter-Domain Routing (CIDR) Range:
+# 10.0.0.0/29 - 8
+# 10.0.0.0/28 - 16
+# 10.0.0.0/26 - 64
+# 10.0.0.0/21 - 2,048
+# 10.0.0.0/20 - 4,096
 
-# 10.0.0.0/8
+ip_network="10.156.0.0" # region: europe-west3
+ip_netmask=28
+
+export GKE_SUBNETWORK_NAME=${GKE_SUBNETWORK_NAME:-"${GKE_APP_NAME}-subnet"}
+export GKE_SUBNETWORK_RANGE=${GKE_SUBNETWORK_RANGE:-"${ip_network}/${ip_netmask}"}
 
 # Configure: Google Compute Engine (GCE)
+# ...
 
 # Configure: Google Virtual Private Cloud (VPC)
-export VPC_LOAD_BALANCER_IP=""
-export VPC_LOAD_BALANCER_IP_NAME="${APP_NAMESPACE}-${APP_INSTANCE_NAME}-static-ipv4"
+export VPC_LOAD_BALANCER_IP=${VPC_LOAD_BALANCER_IP}
+export VPC_LOAD_BALANCER_IP_NAME=${VPC_LOAD_BALANCER_IP_NAME:-"${GKE_APP_NAME}-network-ipv4"}
 
 # Configure `kubectl` to connect to the new cluster:
 # gcloud container clusters get-credentials "${CLUSTER_NAME}"
