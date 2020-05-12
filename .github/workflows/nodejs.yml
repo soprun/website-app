@@ -15,14 +15,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: yarn --frozen-lockfile
+
       - name: Run build --release
         run: yarn run build --release
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v1
         with:
@@ -32,17 +36,9 @@ jobs:
   quality-control:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Find problematic patterns in code
         run: yarn run lint
@@ -53,17 +49,9 @@ jobs:
   unit-test:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Run unit tests once
         run: yarn run test
@@ -80,9 +68,6 @@ jobs:
   secret:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
