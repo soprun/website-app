@@ -15,10 +15,18 @@ jobs:
 
       - name: Run command
         shell: bash
+        run: ./gcloud/env-secret.sh "%SUPER_SECRET%"
         env:
           SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-        run: |
-          ./gcloud/env-secret.sh "%SUPER_SECRET%"
+
+      - name: Run gpg decrypt command
+        shell: bash
+        run: ./gcloud/decrypt_secret.sh
+        env:
+          GPG_SECRET_PASSPHRASE: ${{ secrets.GPG_SECRET_PASSPHRASE }}
+
+      - name: Test printing your secret (Remove this step in production)
+        run: cat ./gcloud/secret/decrypt.json
 
   build:
     runs-on: ubuntu-latest
