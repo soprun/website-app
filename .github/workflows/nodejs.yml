@@ -16,7 +16,7 @@ jobs:
       - name: Run command
         shell: bash
         env:
-          SUPER_SECRET: ${{ secrets.SuperSecret }}
+          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
         run: |
           ./gcloud/env-secret.sh "%SUPER_SECRET%"
 
