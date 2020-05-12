@@ -1,6 +1,8 @@
 # React.js single page application.
 - website: soprun.com
 
+![Node.js CI](https://github.com/soprun/website-app/workflows/Node.js%20CI/badge.svg?branch=master)
+
 # ghost.io: publishing platform
 RESTful JSON API
 - Core API: Admin - Does not change.
