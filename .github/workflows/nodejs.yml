@@ -19,16 +19,22 @@ jobs:
           node-version: 12.x
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --no-dev --frozen-lockfile
 
       - name: Run build --release
         run: yarn run build --release
 
-      - name: Archive production artifacts
+      - name: Archive build artifacts
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: build
+
+      - name: Archive Node.js modules artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: node_modules
+          path: node_modules
 
   quality-control:
     needs: build
