@@ -33,15 +33,6 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run build --release
-        run: yarn run build --release
-
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build
-
   quality-control:
     needs: build
     runs-on: ubuntu-latest
@@ -73,3 +64,16 @@ jobs:
         with:
           name: code-coverage-report
           path: coverage
+
+  build-release:
+    needs: quality-control
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run build --release
+        run: yarn run build --release
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
