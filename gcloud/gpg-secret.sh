@@ -3,8 +3,6 @@
 # ./gpg-secret.sh -f secret.json -p secret -o encrypting.json.gpg --encrypting
 # ./gpg-secret.sh -f encrypting.json.gpg -p secret -o decrypting.json
 
-readonly GPG_SECRET_PASSPHRASE
-
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -15,7 +13,7 @@ case ${key} in
     shift # past value
     ;;
     -p|--passphrase)
-    passphrase="$2"
+    readonly passphrase="$2"
     shift # past argument
     shift # past value
     ;;
@@ -29,39 +27,37 @@ case ${key} in
     shift # past argument
     ;;
     *)    # unknown option
-    readonly encrypting=false
+    shift # past argument
     shift # past argument
     ;;
 esac
 done
 
-passphrase=${GPG_SECRET_PASSPHRASE:-${passphrase}}
+readonly GPG_FILE=${GPG_FILE:-${file}}
+readonly GPG_OUTPUT=${GPG_OUTPUT:-${output}}
+readonly GPG_SECRET_PASSPHRASE=${GPG_SECRET_PASSPHRASE:-${passphrase}}
 
-#echo "file = ${file}"
-#echo "output = ${output}"
-#echo "passphrase = ${passphrase}"
-#echo "encrypting = ${encrypting}"
-
-[[ ! -f ${file} ]] && echo "An error occurred, secret file is required." && exit 1;
-[[ -z ${passphrase} ]] && echo "An error occurred, passphrase is required." && exit 1;
-[[ -z ${output} ]] && echo "An error occurred, output file is required." && exit 1;
+[[ ! -f ${GPG_FILE} ]] && echo "An error occurred, secret file is required." && exit 1;
+[[ -z ${GPG_OUTPUT} ]] && echo "An error occurred, output file is required." && exit 1;
+[[ -f ${GPG_OUTPUT} ]] && echo "An error occurred, output file is exist." && exit 1;
+[[ -z ${GPG_SECRET_PASSPHRASE} ]] && echo "An error occurred, passphrase is required." && exit 1;
 
 if [[ ${encrypting} == "true" ]]; then
   gpg \
     --quiet \
     --batch \
     --cipher-algo AES256 \
-    --passphrase="${passphrase}" \
-    --output ${output} \
-    --symmetric ${file}
+    --passphrase ${GPG_SECRET_PASSPHRASE} \
+    --output ${GPG_OUTPUT} \
+    --symmetric ${GPG_FILE}
 else
   gpg \
     --quiet \
     --batch \
     --yes \
-    --passphrase=${passphrase} \
-    --output ${output} \
-    --decrypt ${file}
+    --passphrase ${GPG_SECRET_PASSPHRASE} \
+    --output ${GPG_OUTPUT} \
+    --decrypt ${GPG_FILE}
 fi
 
 echo "ok" && exit 0;
