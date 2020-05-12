@@ -22,4 +22,4 @@ gpg \
   --yes \
   --decrypt \
   --passphrase=${GPG_SECRET_PASSPHRASE} \
-  --output "$HOME/gcloud/secret/decrypt.json" "$HOME/gcloud/secret/encrypt.json.gpg"
+  --output secret/decrypt.json secret/encrypt.json.gpg
